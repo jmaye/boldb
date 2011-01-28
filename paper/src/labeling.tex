@@ -1,0 +1,147 @@
+Our aim is to find a label for each segmented motion pattern. This
+label represents a traffic situation, e.g. a stop or turn condition.
+Moreover, we are interested in associating two different motion
+segments to the same label whenever they depict the same traffic
+situation. In the following, we show how we can integrate this
+labeling into the on-line framework of Sec.\ref{sec:motion}.
+
+\subsection{Traffic Situation Model}
+We denote the label of a segment $r$ at time $t$ as $x_t^{(r)}$. This
+label can take values in $[1,2,\dots,N]$ corresponding to $N$
+parametric models $M_1,M_2,\dots,M_N$. Each of the $M_i$ is a
+generative model $p(\mathbf{z}_t\mid\boldsymbol{\eta}_i)$ for a
+particular traffic situation with parameter vector
+$\boldsymbol{\eta}_i$. At time $t$, we estimate the distribution over
+the known models conditioned on the data seen so far and the segment
+we are in with the product rule as
+
+\begin{eqnarray}
+\label{eqn:labeling}
+p(x_t^{(r)}\mid \mathbf{z}_{1:t},r_t) &=& \frac{p(\mathbf{z}_{1:t}\mid x_t^r,r_t)p(x_t^r\mid r_t)}
+  {p(\mathbf{z}_{1:t}\mid r_t)}\nonumber\\
+                         &=& \frac{p(\mathbf{z}_t^{(r)}\mid x_t^{(r)},r_t)p(x_t^{(r)}\mid r_t)}
+  {p(\mathbf{z}_t^{(r)}\mid r_t)},
+\end{eqnarray}
+with the same assumption as in Sec.~\ref{sec:motion} about data
+validity, i.e. we consider only data within the current segment.
+
+For the prior part in (\ref{eqn:labeling}), we use the posterior of the previous
+time step, that is
+$p(x_t^r\mid r_t)=p(x_{t-1}^r\mid \mathbf{z}_{t-1}^r,r_{t-1})$. If we are in a new
+segment with $r_t=0$, we set the prior to a uniform distribution over the known
+models. The data likelihood is computed with the model distributions
+$p(\mathbf{z}_t\mid \boldsymbol{\eta}_i)$ in the same fashion as in Sec.~\ref{sec:motion}.
+
+As we want to be able to discover new traffic situations on-line, we
+have to state if the current data $\mathbf{z}_t$ is unlikely to come
+from any of the $N$ known models so far. We use statistical hypothesis
+testing for this. At each time step, we thus perform $N$ statistical
+test. The likelihood ratio test is suitable for our purpose. We
+compare model $M_i$ with a model learned over segment $r$. The test
+statistic is
+
+\begin{equation}
+\label{eqn:statistic}
+D = -2\ln\frac{p(\mathbf{z}_t\mid \boldsymbol{\eta}_i)}{p(\mathbf{z}_t\mid \boldsymbol{\eta}_{ml})},
+\end{equation}
+where $\boldsymbol{\eta}_{ml}$ is the maximum likelihood solution for
+$\boldsymbol{\eta}$ over the current segment $r$.
+
+Based on the value of $D$, we have to decide whether to accept or
+reject the null hypothesis, i.e. data in segment $r$ arises from model
+$M_i$. It is shown that when the sample size grows towards infinity,
+$D$ converges towards a Chi-square distribution with $K-1$ degrees of
+freedom, where $K$ is the dimension of $\boldsymbol{\eta}$. In our
+case, the sample size represents the number of data used to compute
+the maximum likelihood solution. As will be shown below, it will be
+sufficient to approximate $D$ with a Chi-square distribution.  We will
+thus compare $D$ to the Chi-square value corresponding to the desired
+statistical significance $\xi$ of the null hypothesis. In practice,
+this is done by computing the value of the cumulative distribution
+function of the Chi-square distribution for $D$ and reject the model
+$M_i$ if it is below $\xi$.
+
+In case all models are rejected, we create a new instance $M_{N+1}$
+with parameter vector $\boldsymbol{\eta}_{ml}$, set $p(x_{N+1}\mid
+\mathbf{z}_t^{(r)},r_t)=p_{new}$, and $p(x_{i=1:N}\mid
+\mathbf{z}_t^{(r)},r_t)=(1-p_{new})/N$. If a model $M_i$ is accepted
+by the statistical test, we update its parameters vector
+$\boldsymbol{\eta}_i$ with $\mathbf{z}_t$.
+
+\subsection{Measurements Representation}
+We represent images using the widely used \emph{bag-of-words}
+approach
+. A regular grid cuts an image into local patches on
+which features are computed.  We use a patch size of $l\times l$ and
+Scale-Invariant Feature Transform (SIFT) \cite{lowe04distinctive}
+descriptors as they have been shown to be highly discriminative for
+object recognition. $N$ images are randomly selected from the entire
+dataset to build a \emph{codebook} or dictionary of features using
+K-means clustering. Each patch of an image is then assigned to the
+nearest \emph{codeword} of the dictionary and we can therefore build a
+convenient histogram representation.
+
+As one can imagine, we lose spatial relationship between the features of an
+image with this kind of representation. Therefore, we can compute histograms of
+features at different scales as in \cite{lazebnik06beyond} with the
+\emph{spatial pyramid} approach. It is worth noting that histograms only have to
+be extracted at the finer levels since the coarser levels are just summations of
+these. We term the number of levels in the pyramid as $L$, with $L=0$
+representing the entire image.
+
+The link between bag-of-\emph{features} models in computer vision and
+bag-of-words model in text modeling is intuitive. We can therefore use
+the generative model of \cite{madsen05modeling} to represent an image
+in a probabilistic manner as was already proposed in
+\cite{ranganathan09bayesian}.  The idea of \cite{madsen05modeling} is
+to represent a text document with a Dirichlet Compound Multinomial
+(DCM) model, also known as Multivariate Polya distribution. It models
+the fact that when a particular word occurs in a document, it is more
+likely to appear again. In terms of images, this makes sense since the
+same feature is likely to appear several times. A DCM is simply a
+multinomial distribution with parameters $\boldsymbol{\theta}=
+[\theta_1,\theta_2,\dots,\theta_K]$ which have been sampled from a
+Dirichlet prior with parameters $\boldsymbol{\alpha}=
+[\alpha_1,\alpha_2,\dots,\alpha_K]$. Formally, it is expressed as
+
+\begin{equation}
+\label{eqn:polya}
+p(\mathbf{z}\mid \boldsymbol{\alpha}) = \int_{\boldsymbol{\theta}} p(\mathbf{z}\mid \boldsymbol{\theta})
+  p(\boldsymbol{\theta}\mid \boldsymbol{\alpha})d\boldsymbol{\theta},
+\end{equation}
+
+with $p(\mathbf{z}\mid \boldsymbol{\theta})$ a multinomial distribution with
+parameter $\boldsymbol{\theta}$ and $p(\boldsymbol{\theta}\mid \boldsymbol{\alpha})$
+a Dirichlet distribution with parameter $\boldsymbol{\alpha}$. We notice that we
+can sample from (\ref{eqn:polya}) only knowing $\boldsymbol{\alpha}$.
+
+Performing the integration in (\ref{eqn:polya}) yields the final closed-form
+solution
+
+\begin{equation}
+\label{eqn:polya_integrated}
+p(\mathbf{z}\mid \boldsymbol{\alpha}) =
+  \frac{\Gamma(\sum_k^K\alpha_k)}{\Gamma(\sum_k^K n_k + \alpha_k)}
+  \prod_k^K\frac{\Gamma(n_k+\alpha_k)}{\Gamma(\alpha_k)},
+\end{equation}
+
+where $\Gamma(.)$ is the Gamma function and $n_k=\sum_j\;\delta(z_j-k)$.
+
+As there exists no analytical solution to the maximum likelihood parameters
+estimation of a DCM, an iterative gradient descent optimization is used and
+leads to the update rule
+
+\begin{equation}
+\label{eqn:alpha_update}
+\alpha_k^{new} = \alpha_k\frac{\sum_d^D\Psi(n_{dk}+\alpha_k)-\Psi(\alpha_k)}
+  {\sum_d^D\Psi(n_d+\sum_{k'}^K\alpha_{k'})-\Psi(\sum_{k'}^K\alpha_{k'})},
+\end{equation}
+
+where $\Psi(.)$ is the digamma function and $D$ the number of data points
+$\mathbf{z}$ used for the estimation.
+
+In practice, each model $M_i$ is represented by a DCM with parameters vector
+$\boldsymbol{\alpha_i}$. The model parameters are learned from the data using
+the iterative update rule (\ref{eqn:alpha_update}) and the likelihood term of
+(\ref{eqn:labeling}) is evaluated with (\ref{eqn:polya_integrated}). The
+distribution (\ref{eqn:labeling}) is computed for each particle and stored.

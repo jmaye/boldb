@@ -1,0 +1,34 @@
+One research area that has turned more and more into the focus of interest
+during the last years is the development of driver intelligent assistant
+systems. In particular, a very active topic is the design of human-friendly
+vehicle control systems, able to meet the driver specific behaviors.
+In this paper we address the problem of learning driver behaviors based on
+camera images and inertial information (IMU). Our approach proposes a novel
+on-line and unsupervised way of learning driver's behavior in different traffic
+conditions. Specifically we learn the relationship between vehicle motion and
+image streams. Most existing techniques build a behavior model from heuristic
+rules or from supervised training data. In this paper we introduce a novel
+technique that uses a \textit{change-point} detection model to segment IMU and
+image streams into portions corresponding to behaviors. Change-point detection
+is the problem of detecting abrupt changes to the parameters of a statistical
+model. This is computed on-line and in an unsupervised manner. The motion data
+segmented by these changes define a driver behavior.
+
+The idea is to use a Bayesian approach to compute the probability of a
+change-point occurring at each time step. A change point is obtained by
+combining a prior on the occurrence of change-points with the likelihood of the
+current measurement given all the possible scenarios in which change-points
+could have occurred in the past. We have formulated a
+practical approximation of this method by using a Rao-Blackwellized particle
+filter. Furthermore, each particle learns a distribution over the known traffic
+situations and possible actions. Traffic situations and action models are
+updated on-line. For each time step, we are thus able to infer the most probable
+action to apply given a traffic situation.
+
+The rest of the paper is structured as follows. Section~\ref{sec:related}
+summarizes the previous work related to ours. Section~\ref{sec:motion}
+describes our motion segmentation method. Section~\ref{sec:labeling}
+shows how we model a traffic situation. Section~\ref{sec:action} demonstrates
+our action model. Section~\ref{sec:exp} presents experimental results.
+Section~\ref{sec:conc} outlines our conclusions and provides some insights for
+future work.

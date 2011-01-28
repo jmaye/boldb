@@ -1,0 +1,71 @@
+\documentclass[letterpaper, 10 pt, conference]{sty/ieeeconf}
+
+\IEEEoverridecommandlockouts
+
+\overrideIEEEmargins
+
+\usepackage{graphics}
+\usepackage{epsfig}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{txfonts}
+\usepackage[T1]{fontenc}
+
+\begin{document}
+
+\title{\LARGE \bf
+Bayesian On-line Learning of Driving Behaviors
+}
+
+\author{
+\authorblockN{
+J\'{e}r\^{o}me Maye\authorrefmark{1},
+Rudolph Triebel\authorrefmark{1},
+Luciano Spinello\authorrefmark{2},
+and Roland Siegwart\authorrefmark{1}
+}
+\authorblockA{
+\authorrefmark{1}
+Autonomous Systems Lab, ETH Zurich, Switzerland\\
+email: \{jerome.maye, rudolph.triebel, roland.siegwart\}@mavt.ethz.ch}
+\authorblockA{
+\authorrefmark{2}
+Social Robotics Lab, Department of Computer Science, University of Freiburg,
+Germany\\
+email: spinello@informatik.uni-freiburg.de}
+}
+
+\maketitle
+
+\begin{abstract}
+\input{src/abstract.tex}
+\end{abstract}
+
+\section{Introduction}
+\input{src/introduction.tex}
+
+\section{Related Work\label{sec:related}}
+\input{src/related.tex}
+
+\section{Bayesian Online Segmentation of Motion Data\label{sec:motion}}
+\input{src/motion.tex}
+
+\section{Labeling of Traffic Situations\label{sec:labeling}}
+\input{src/labeling.tex}
+
+\section{Action Model\label{sec:action}}
+\input{src/action.tex}
+
+\section{Experiments\label{sec:exp}}
+\input{src/experiments.tex}
+
+\section{Conclusion\label{sec:conc}}
+\input{src/conclusion.tex}
+
+\section*{Acknowledgment}
+This work has partly been supported by the EC under FP7-231888-EUROPA.
+
+\bibliographystyle{sty/IEEEtran}
+\bibliography{bib/IEEEabrv,bib/bibliography}
+
+\end{document}

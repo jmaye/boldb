@@ -1,0 +1,74 @@
+In order to evaluate the approach proposed in this paper, we have collected
+a dataset with a car in an urban setting. Our car is equipped with a Sony
+XCD-SX910 camera recording $1280$x$960$ images at $3.75$ frames per second and
+an XSens MTi IMU running at $100$ Hz with $x$ pointing forward, $y$ to the
+right, and $z$ upward. The sequence contains $8218$ images and lasts around $40$
+minutes. We have encountered different scenes comprising of traffic lights,
+crosswalks, or changes of speed limit. We have driven in a loop so as to come
+several times in the same situation and thus have an evaluation of the quality
+of our solution.
+
+\subsection{Motion Segmentation}
+In this first experiment, we want to estimate the quality of our
+motion segmentation algorithm. After running the framework presented
+in Sec.~\ref{sec:motion}-\ref{sec:action}, we performed inference on
+the final posterior distribution $p(r_t\mid z_{1:t})$ to get the
+optimal sequence of segments length which represents our motion
+segments. We set the hazard rate to $\lambda=1/10$, the number of
+particles to $P=100$, and the prior hyper-parameters of the
+Normal-Wishart to $\kappa_0=1, \boldsymbol{\mu}_0= \mathbf{0},\nu_0=3,
+\boldsymbol{\Lambda}_0=\mathbf{I}$. For motion segmentation, we only
+consider IMU data at $10$ Hz.
+
+Fig.~\ref{fig:motion_segments} shows the extracted motion segments along with
+the corresponding IMU data. Our algorithm identified $113$ segments which are
+validated by visual inspection of the IMU data and corresponding images.
+Furthermore, the segmentation has been compared to a manual annotation of our
+image sequence and exhibited an accuracy of about $95\%$. As a
+comparison, we show the segmentation results obtained using the method
+of~\cite{ranganathan10pliss}. This algorithm uses only images to decide on the
+segments length and appears to be definitely less robust on this dataset.
+Self-similarity is indeed an issue in urban environments and boundaries in an
+image sequence are often unclear.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/cpDetect.eps}
+\caption{Optimal motion segmentation from IMU data. The three top plots are the
+  IMU raw values over time. The two bottom plots depict the motion segments
+  discovered by our algorithm (top) and by \cite{ranganathan10pliss} (bottom).
+  The $y$ axis of the motion segments plots represent the current segment
+  length in time steps of the algorithm.}
+\label{fig:motion_segments}
+\end{figure}
+
+\subsection{Traffic Situation Labeling and Recognition}
+In this second experiment, we are interested in evaluating the part of our
+algorithm presented in Sec.~\ref{sec:labeling}. We want to see how many traffic
+situations models were discovered and what they represent. Moreover, we want
+to see if we can re-associate place models in other runs at the same place.
+
+SIFT descriptors have been computed on a grid of $l=8$x$8$. We have created a
+dictionary of $K=1024$ SIFT features from $N=400$ images randomly picked in our
+dataset. The pyramid representations were generated on $L=3$ levels. The prior
+of the DCM for a new motion segment was learned from the same $N$ images. The
+probability for a new label was set to $p_{new}=0.5$ and the Chi-square
+threshold to $\xi=0.1$.
+
+Our algorithm discovered $10$ traffic situation models. Fig.~\ref{fig:place64}
+and \ref{fig:place103} depict two situations that appeared several times in our
+run.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/place64.eps}
+\caption{First example of a traffic situation discovered by our algorithm.}
+\label{fig:place64}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/place103.eps}
+\caption{Second example of a traffic situation discovered by our algorithm.}
+\label{fig:place103}
+\end{figure}
