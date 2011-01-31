@@ -149,16 +149,17 @@ time steps. We can then get the Maximum A Posteriori (MAP) estimate of the
 sequence of segment lengths using the on-line Viterbi
 algorithm of~\cite{fearnhead07online}.
 
-Regarding complexity, the storage of the posterior distribution has a memory
-cost of $O(n^2)$ and $O(n)$ computational cost. This might be prohibitive for
-huge datasets. For this reason, the distribution has to be approximated. A
-simple way sketched in \cite{adams07bayesian} is to discard values where the
-distribution is significantly low, i.e., lower than a given threshold. However,
-as we want to accurately estimate our distribution and control the computational
-costs, we use a \emph{particle filter}. The state-space of $r_t$ being discrete
-and the number of successor states being small, we can evaluate all the possible
-descendants of $r_t$. Indeed, if $r_t$ has $k$ possible values, $r_{t+1}$ will
-have $k+1$ possible values. At each time step $t$, we approximate the posterior
+Regarding complexity, if we have processed $n$ data points, the storage of the
+full posterior distribution has a memory cost of $O(n^2)$ and $O(n)$
+computational cost. This might be prohibitive for huge datasets. For this
+reason, the distribution has to be approximated. A simple way sketched
+in~\cite{adams07bayesian} is to discard values where the distribution is
+significantly low, i.e., lower than a given threshold. However, as we want to
+accurately estimate our distribution and control the computational costs, we use
+a \emph{particle filter}. The state-space of $r_t$ being discrete and the number
+of successor states being small, we can evaluate all the possible descendants of
+$r_t$. Indeed, if $r_t$ has $k$ possible values, $r_{t+1}$ will have $k+1$
+possible values. At each time step $t$, we approximate the posterior
 distribution with a set $\{r_t^{(i)},\boldsymbol{\psi}_{n}^{(i)}\}_{i=1}^M$ of
 $M$ particles weighted by $\{w_t^{(i)}\}_{i=1}^M$ with
 
@@ -187,8 +188,10 @@ $s_n$ is thus
 $\boldsymbol{\eta}_{n}=\{\boldsymbol{\mu}_t,\boldsymbol{\Sigma}_t\}$. In order
 to solve the integral in (\ref{eqn:preddistr}) analytically, we model the
 parameter prior as a normal-Wishart distribution which is conjugate to the
-multivariate Gaussian. This distribution has four hyperparameters $\boldsymbol{\psi}_{n}=\{kappa_t,\boldsymbol{\rho}_t,\nu_t,\boldsymbol{\Lambda}_t\}$ that can be
-updated iteratively as a new data point $\mathbf{z}_t$ arrives with:
+multivariate Gaussian. This distribution has four hyperparameters
+$\boldsymbol{\psi}_{n}=\{\kappa_t,\boldsymbol{\rho}_t,\nu_t,
+\boldsymbol{\Lambda}_t\}$ that can be updated iteratively as a new data point
+$\mathbf{z}_t$ arrives with:
 
 \begin{eqnarray}
 \label{eqn:hyperupdate}
@@ -202,7 +205,7 @@ updated iteratively as a new data point $\mathbf{z}_t$ arrives with:
   (\mathbf{z}_t - \boldsymbol{\rho}_{t-1})^\intercal.
 \end{eqnarray}
 
-From (\ref{eqn:hyperupdate}), we can express the sufficient statistics of the
+From (\ref{eqn:hyperupdate}), we can express the parameters of the
 multivariate normal distribution as
 
 \begin{eqnarray}
@@ -211,10 +214,10 @@ multivariate normal distribution as
 \boldsymbol{\Sigma}_t &=& \boldsymbol{\Lambda}_t^{-1} / \kappa_t.
 \end{eqnarray}
 
-Finally, for the computation of the data likelihood in
-(\ref{eqn:likelihood}) we approximate the multivariate normal
-distribution with a Student's $t$-distribution which is known to be
-more robust to outliers in case of few data points. This distribution
-converges to the Gaussian when its degrees of freedom go to infinity.
-We use the number of processed points as the degrees of freedom for
-the distribution, so as to have a bigger variance at the beginning.
+Finally, for the computation of the predictive distribution in
+\eqref{eqn:preddistr}, we approximate the multivariate normal distribution with
+a Student's $t$-distribution which is known to be more robust to outliers in
+case of few data points. This distribution converges to the Gaussian when its
+degrees of freedom go to infinity. We use the number of processed points as the
+degrees of freedom for the distribution, so as to have a bigger variance at the
+beginning.
