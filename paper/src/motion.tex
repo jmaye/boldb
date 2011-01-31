@@ -52,11 +52,12 @@ p(r_t,\mathbf{z}_{1:t}) \hspace{-0.2cm}&=& \hspace{-0.35cm} \sum_{r_{t-1}}p(r_t,
              \sum_{r_{t-1}}p(r_t\mid r_{t-1})p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{1:t-1})p(r_{t-1},\mathbf{z}_{1:t-1}).
 \end{eqnarray}
 
-The right-hand side of \eqref{eqn:joint} consist of three terms: the
+The right-hand side of \eqref{eqn:joint} consists of three terms: the
 \emph{transition probability} $p(r_t\mid r_{t-1})$ of the Markov chain formed by
 $r_1,r_2,\dots,r_t$, the \emph{predictive distribution}
 $p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{1:t-1})$, and the posterior
-$p(r_{t-1},\mathbf{z}_{1:t-1})$ from the previous time step.
+$p(r_{t-1},\mathbf{z}_{1:t-1})$ from the previous time step. We have exploited
+the Markov assumption for the simplifications in \eqref{eqn:joint}.
 %Fig.\ref{fig:model} illustrates \eqref{eqn:joint} with a graphical model.
 
 %\begin{figure}[t]
