@@ -133,8 +133,8 @@ d\boldsymbol{\eta}_{n}.
 \end{equation}
 
 Here, we used the shorthand notation $s_n$ for all the data points in the
-current segment and we added the prior hyperparameters $\boldsymbol{\psi}_{n}$.
-The integral in \eqref{eqn:preddistr} can be solved
+current segment and we added the prior hyperparameters $\boldsymbol{\psi}_{n}$
+for completeness. The integral in \eqref{eqn:preddistr} can be solved
 analytically if we model the prior of the parameter vector
 $\boldsymbol{\eta}_{n}$ as a conjugate to the probability density function
 $p(\mathbf{z}_t\mid \boldsymbol{\eta}_{n})$. Otherwise, this leads to expensive
@@ -149,42 +149,46 @@ time steps. We can then get the Maximum A Posteriori (MAP) estimate of the
 sequence of segment lengths using the on-line Viterbi
 algorithm of~\cite{fearnhead07online}.
 
-Regarding complexity, the storage of the posterior distribution has a
-memory cost of $O(n^2)$ and $O(n)$ computational cost. This might be
-prohibitive for huge datasets. For this reason, the distribution has
-to be approximated. A simple way sketched in \cite{adams07bayesian} is
-to discard values where the distribution is significantly low, i.e.,
-lower than a given threshold. However, if we want to accurately
-estimate our distribution and control the computational costs, we use
-the \emph{particle filter} re-sampling concepts. At each time step, we
-limit the number of support points of the posterior to $N$ particles
-$c_1,c_2,\dots,c_N$ with weights $w_1,w_2,\dots,w_N$. We can set the
-weight of a particle to be
+Regarding complexity, the storage of the posterior distribution has a memory
+cost of $O(n^2)$ and $O(n)$ computational cost. This might be prohibitive for
+huge datasets. For this reason, the distribution has to be approximated. A
+simple way sketched in \cite{adams07bayesian} is to discard values where the
+distribution is significantly low, i.e., lower than a given threshold. However,
+as we want to accurately estimate our distribution and control the computational
+costs, we use a \emph{particle filter}. The state-space of $r_t$ being discrete
+and the number of successor states being small, we can evaluate all the possible
+descendants of $r_t$. Indeed, if $r_t$ has $k$ possible values, $r_{t+1}$ will
+have $k+1$ possible values. At each time step $t$, we approximate the posterior
+distribution with a set $\{r_t^{(i)},\boldsymbol{\psi}_{n}^{(i)}\}_{i=1}^M$ of
+$M$ particles weighted by $\{w_t^{(i)}\}_{i=1}^M$ with
 
 \begin{equation}
 \label{eqn:weight}
-w_t^{(r)} = p(y_t\mid r_{t-1},y_t^{(r)})
+w_t^{(i)} \propto p(\mathbf{z}_t\mid r_{t-1}^{(i)},s_n^{(i)},
+\boldsymbol{\psi}_{n}^{(i)}).
 \end{equation}
 
-and use the Stratified Optimal Re-sampling (SOR) presented in
-\cite{fearnhead07online} whenever we reach our particles number limit.
+In order to limit the number of particles at each time-step, we use the
+Stratified Optimal Re-sampling (SOR) presented in~\cite{fearnhead07online}
+whenever $M$ is bigger than our particles number limit $N$.
 
 Using this method reduces the memory costs to $O(n)$ and the computational costs
 to $O(1)$, i.e. constant run-time. We also notice that this particle filter is
-Rao-Blackwellized~\cite{casella96rao} and thus has a low variance.
+Rao-Blackwellized~\cite{casella96rao} and has thus a lower variance since the
+sampling space of the state is reduced to $r_t$ and the rest is marginalized out.
 
 \subsection{Application to Motion Data Segmentation}
-In our particular case, data comes from an Inertial Measurement Unit
-(IMU) and we consider accelerations in the three standard axes
-$x,y,z$, with $x$ pointing forward, $y$ on the left, and $z$ upward.
-We can safely assume that an IMU measurement $\mathbf{z}_t$ arises
-from a multivariate normal distribution with mean $\boldsymbol{\mu}_t$
-and covariance matrix $\boldsymbol{\Sigma}_t$.  In order to solve the
-integral in (\ref{eqn:likelihood}) analytically, we model the
-parameter prior as a normal-Wishart distribution which is conjugate to
-the multivariate Gaussian.  This distribution has four parameters that
-can be updated iteratively as a new data point $\mathbf{z}_t$ arrives
-with:
+In our particular case, data comes from an IMU and we consider accelerations in
+the three standard axes $x,y,z$, with $x$ pointing forward, $y$ on the left, and
+$z$ upward. We can safely assume that an IMU measurement $\mathbf{z}_t$ arises
+from a multivariate normal distribution with mean $\boldsymbol{\mu}_t$ and
+covariance matrix $\boldsymbol{\Sigma}_t$. The parameter vector for segment
+$s_n$ is thus
+$\boldsymbol{\eta}_{n}=\{\boldsymbol{\mu}_t,\boldsymbol{\Sigma}_t\}$. In order
+to solve the integral in (\ref{eqn:preddistr}) analytically, we model the
+parameter prior as a normal-Wishart distribution which is conjugate to the
+multivariate Gaussian. This distribution has four hyperparameters $\boldsymbol{\psi}_{n}=\{kappa_t,\boldsymbol{\rho}_t,\nu_t,\boldsymbol{\Lambda}_t\}$ that can be
+updated iteratively as a new data point $\mathbf{z}_t$ arrives with:
 
 \begin{eqnarray}
 \label{eqn:hyperupdate}
