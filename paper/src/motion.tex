@@ -1,48 +1,47 @@
-Our motion segmentation algorithm is based on \emph{change-point
-  detection}. A change-point is an abrupt variation in the generative
-parameters of sequential data. An efficient Bayesian on-line method for
-detecting change points has been independently proposed by Adams and
-MacKay~\cite{adams07bayesian} and by Fearnhead and
-Liu~\cite{fearnhead07online}. In the following, we first present this
-method in general and then show how we apply it to the problem of
+Our motion segmentation algorithm is based on \emph{change-point detection}. A
+change-point is an abrupt variation in the generative parameters of sequential
+data. An efficient Bayesian on-line method for detecting change-points has been
+independently proposed by Adams and MacKay~\cite{adams07bayesian} and by
+Fearnhead and Liu~\cite{fearnhead07online}. In the following, we first present
+this method in general and then show how we apply it to the problem of
 segmenting motion data.
 
 \subsection{Change-Point Detection}
 Suppose we are given a time-dependent sequence of observations $\mathbf{z}_1,
-\mathbf{z}_2, \dots,\mathbf{z}_T$ where the $\mathbf{z}_t$ can be scalars or vectors. Our goal is to find
-segments $s_1,s_2,\dots,s_N$ with $s_n=[\mathbf{z}_{b_n},\dots,\mathbf{z}_{e_n}]$, where
-$e_n > b_n$ and $b_n = e_{n-1}+1$ for $n=1,\dots,N$. We assume that all data
-points $\mathbf{z}_{b_n},\dots,\mathbf{z}_{e_n}$ of a segment $s_n$ are independently and
-identically distributed (i.i.d.) according to a parameterized
-statistical model \mbox{$p(\mathbf{z}\mid \boldsymbol{\eta}_n)$}. The parameter vectors
-$\boldsymbol{\eta}_1,\dots \boldsymbol{\eta}_N$ are also assumed to be
-i.i.d.  The computation of the segments will be done on-line, i.e. at
-each time step $t$ a decision is made whether $y_t$ is added to the
-current segment $s_n=[\mathbf{z}_{b_n},\dots,\mathbf{z}_{t-1}]$ or a new segment is
-started. We denote the length of the current segment as $r_t$. Thus,
-after deciding on $\mathbf{z}_t$, we have either $r_t=r_{t-1}+1$ or $r_t=0$ in
-case we start a new segment.
+\mathbf{z}_2, \dots,\mathbf{z}_T$, where the $\mathbf{z}_t$ can be scalars or
+vectors. Our goal is to find segments $s_1,s_2,\dots,s_N$ with
+$s_n=[\mathbf{z}_{b_n},\dots,\mathbf{z}_{e_n}]$, where $e_n > b_n$ and
+$b_n = e_{n-1}+1$ for $n=1,\dots,N$. We assume that all data points
+$\mathbf{z}_{b_n},\dots,\mathbf{z}_{e_n}$ of a segment $s_n$ are independently
+and identically distributed (i.i.d.) according to a parameterized statistical
+model \mbox{$p(\mathbf{z}\mid \boldsymbol{\eta}_n)$}. The parameter vectors
+$\boldsymbol{\eta}_1,\dots \boldsymbol{\eta}_N$ are also assumed to be i.i.d.
+The computation of the segments is done on-line, i.e., at each time step $t$ a
+decision is made whether $\mathbf{z}_t$ is added to the current segment
+$s_n=[\mathbf{z}_{b_n},\dots,\mathbf{z}_{t-1}]$ or a new segment is started. As
+shown above, we denote the length of the current segment as $r_t$. Thus, after
+deciding on $\mathbf{z}_t$, we have either $r_t=r_{t-1}+1$ or $r_t=0$ in case we
+start a new segment.
 
-To determine whether time step $t$ is a change point, we analyze the
-posterior distribution of the segment length conditioned on the data
-observed so far, i.e.  $p(r_t\mid \mathbf{z}_{1:t})$. Using the product rule, this
-posterior can be written as
-
-%Knowing this distribution for
-%all $t$, we show below how the positions of the change points can be
-%inferred.
+To determine whether time step $t$ is a change-point, we analyze the posterior
+distribution of the segment length conditioned on the data observed so far,
+i.e. $p(r_t\mid \mathbf{z}_{1:t})$. Using the product rule, this filtering
+distribution can be written as
 
 \begin{equation}
 \label{eqn:posterior}
-p(r_t\mid \mathbf{z}_{1:t}) = \frac{p(r_t,\mathbf{z}_{1:t})}{p(\mathbf{z}_{1:t})},
+p(r_t\mid \mathbf{z}_{1:t})=
+  \frac{p(r_t,\mathbf{z}_{1:t})}{p(\mathbf{z}_{1:t})},
 \end{equation}
+
 with the normalizer
 
 \begin{equation}
 \label{eqn:normalizer}
 p(\mathbf{z}_{1:t}) = \sum_{r_t}p(r_t,\mathbf{z}_{1:t}).
 \end{equation}
-The joint distribution can be expressed as
+
+The joint distribution in \eqref{eqn:posterior} can be expressed as
 
 \begin{eqnarray}
 \label{eqn:joint}
@@ -52,42 +51,44 @@ p(r_t,\mathbf{z}_{1:t}) \hspace{-0.2cm}&=& \hspace{-0.35cm} \sum_{r_{t-1}}p(r_t,
              &  = &  \hspace{-0.35cm}
              \sum_{r_{t-1}}p(r_t\mid r_{t-1})p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{1:t-1})p(r_{t-1},\mathbf{z}_{1:t-1}).
 \end{eqnarray}
-The right-hand side of Eq.~\eqref{eqn:joint} consist of three terms:
-the \emph{transition probability} $p(r_t\mid r_{t-1})$ of the Markov
-chain formed by $r_1,r_2,\dots,r_t$, the \emph{data likelihood}
+
+The right-hand side of \eqref{eqn:joint} consist of three terms: the
+\emph{transition probability} $p(r_t\mid r_{t-1})$ of the Markov chain formed by
+$r_1,r_2,\dots,r_t$, the \emph{predictive distribution}
 $p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{1:t-1})$, and the posterior
-$p(r_{t-1},y_{1:t-1})$ from the previous time step. Fig.\ref{fig:model}
-illustrates (\ref{eqn:joint}) with a graphical model.
+$p(r_{t-1},\mathbf{z}_{1:t-1})$ from the previous time step.
+%Fig.\ref{fig:model} illustrates \eqref{eqn:joint} with a graphical model.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.5\columnwidth]{fig/model.eps}
-\caption{Graphical model representation of the joint posterior
-  $p(r_t,\mathbf{z}_{1:t})$.}
-\label{fig:model}
-\end{figure}
+%\begin{figure}[t]
+%\centering
+%\includegraphics[width=0.5\columnwidth]{fig/model.eps}
+%\caption{Graphical model representation of the joint posterior
+%  $p(r_t,\mathbf{z}_{1:t})$.}
+%\label{fig:model}
+%\end{figure}
 
-As there are only two possible values for $r_t$, namely
-\mbox{$r_{t-1}+1$} or $0$, we can model the transition probability
-using statistical survival analysis, i.e. the segment length can
-either survive or ``die''. To do this, we define a \emph{survival
-  function} $S(t)$ as the probability that the current segment is
-still alive after time step $t$. The complement of $S$ is usually
-named the \emph{lifetime distribution function} $F(t)= 1- S(t)$ and
-its temporal derivative $f(t)$ is denoted the \emph{event rate}.
-Finally, the \emph{hazard function} $h(t)$ is defined as the event
-rate conditioned on the survival of the segment at time $t$, i.e.
+As there are only two possible successor states for $r_t$, namely
+\mbox{$r_{t-1}+1$} or $0$, we can model the transition probability using
+statistical survival analysis, i.e., the segment length can
+either ``survive'' or ``die''. To do this, we define a \emph{survival function}
+$S(t)$ as the probability that the current segment is still alive after time
+step $t$. The complement of $S$ is usually named the
+\emph{lifetime distribution function} $F(t)= 1- S(t)$ and its temporal
+derivative $f(t)$ is denoted the \emph{event rate}. Finally, the
+\emph{hazard function} $h(t)$ is defined as the event rate conditioned on the
+survival of the segment at time $t$, i.e.
 
 \begin{equation}
-\label{eqn:hazard}
+\label{eqn:hazardfunc}
 h(t) = \frac{f(t)}{S(t)} = \frac{f(t)}{1 - F(t)}.
 \end{equation}
-Intuitively, $h(t)$ represents the probability that the segment dies
-exactly at the current time instant $t$. We can use $h(t)$ to
-model the transition probability as
+
+Intuitively, $h(t)$ represents the probability that the segment dies exactly at
+the current time instant $t$. We can use $h(t)$ to model the transition
+probability as
 
 \begin{equation}
-\label{eqn:hazard}
+\label{eqn:transprob}
 p(r_t\mid r_{t-1}) = \left\{
 \begin{array}{l l}
 h(r_{t-1}+1) & \quad \text{if $r_t=0$ }\\
@@ -96,18 +97,17 @@ h(r_{t-1}+1) & \quad \text{if $r_t=0$ }\\
 \end{array} \right.
 \end{equation}
 
-
 A common approach is to model $S(t)$ as an exponential function
-$S(t)=\exp(-\lambda t)$ with some given rate parameter $\lambda$.  Then the
+$S(t)=\exp(-\lambda t)$ with some given rate parameter $\lambda$. Then, the
 hazard function turns into
 
 \begin{equation}
-\label{eqn:hazard_exp}
+\label{eqn:hazardexp}
 h(t) = \frac{\lambda\exp(-\lambda t)}{\exp(-\lambda t)} = \lambda.
 \end{equation}
-Thus, the hazard rate is constant and the process
-is  ``memoryless''. Fig.\ref{fig:transition}
-shows an example of transitions for $r_{t-1}$.
+
+Thus, the hazard rate is constant and the process is ``memoryless''.
+Fig.~\ref{fig:transition} shows an example of transitions for $r_{t-1}$.
 
 \begin{figure}[t]
 \centering
@@ -116,41 +116,43 @@ shows an example of transitions for $r_{t-1}$.
 \label{fig:transition}
 \end{figure}
 
-For the computation of the data likelihood we first note that it is
-only dependent on the data of the current segment. Thus, it can be
-expressed as $p(\mathbf{z}_t\mid r_{t-1}, \mathbf{z}_{b_n},\dots,\mathbf{z}_{t-1})$ where $b_n$
-is the time step of the first data point in the current segment
-$s_n$. We compute the data likelihood by marginalizing over the model
-parameters $\boldsymbol{\eta}_n$, i.e.
+For the computation of the predictive distribution, we first note that it is
+only dependent on the data of the current segment. Thus, it can be expressed as
+$p(\mathbf{z}_t\mid r_{t-1}, \mathbf{z}_{b_n},\dots,\mathbf{z}_{t-1})$ where
+$b_n$ is the time step of the first data point in the current segment $s_n$. We
+compute the predictive distribution by marginalizing over the model parameters
+$\boldsymbol{\eta}_n$, i.e.
 
 \begin{equation}
-\label{eqn:likelihood}
-p(\mathbf{z}_t\mid r_{t-1},s_n) = \int_{\boldsymbol{\eta}_{n}}
-  p(\mathbf{z}_t\mid \boldsymbol{\eta}_{n})p(\boldsymbol{\eta}_{n}\mid r_{t-1},s_n)
-  d\boldsymbol{\eta}_{n}.
+\label{eqn:preddistr}
+p(\mathbf{z}_t\mid r_{t-1},s_n,\boldsymbol{\psi}_n)=
+\int_{\boldsymbol{\eta}_{n}}p(\mathbf{z}_t\mid \boldsymbol{\eta}_{n})
+p(\boldsymbol{\eta}_{n}\mid r_{t-1},s_n,\boldsymbol{\psi}_n)
+d\boldsymbol{\eta}_{n}.
 \end{equation}
-Here, we used the shorthand notation $s_n$ for all data points in the
-current segment. The integral in Eq.~\eqref{eqn:likelihood} can be
-solved analytically if we model the prior of the parameter vector
-$\boldsymbol{\eta}_{n}$ as a conjugate to the data likelihood
-$p(\mathbf{z}_t\mid \boldsymbol{\eta}_{n})$. Otherwise this leads to
-expensive numerical computations. When the terms inside the integral
-are conjugate models, the marginal distribution is usually a function
-of the sufficient statistics which can be updated iteratively as data
-arrives.
+
+Here, we used the shorthand notation $s_n$ for all the data points in the
+current segment and we added the prior hyperparameters $\boldsymbol{\psi}_{n}$.
+The integral in \eqref{eqn:preddistr} can be solved
+analytically if we model the prior of the parameter vector
+$\boldsymbol{\eta}_{n}$ as a conjugate to the probability density function
+$p(\mathbf{z}_t\mid \boldsymbol{\eta}_{n})$. Otherwise, this leads to expensive
+numerical computations. When the terms inside the integral are conjugate models,
+the marginal distribution is usually a function of the sufficient statistics
+which can be updated iteratively as data arrives.
 
 \subsection{Complexity and Approximate Inference}
-In order to exactly infer the positions of all change points until
-time $t$, we need to compute and store $p(r_t\mid y_{1:t})$ for $t$
-and all previous time steps. We can then get the Maximum A Posteriori (MAP)
-estimation of the sequence of segment length using on-line Viterbi
-algorithm~\cite{fearnhead07online}.
+In order to exactly infer the positions of all change-points until time $t$, we
+need to compute and store $p(r_t\mid \mathbf{z}_{1:t})$ for $t$ and all previous
+time steps. We can then get the Maximum A Posteriori (MAP) estimate of the
+sequence of segment lengths using the on-line Viterbi
+algorithm of~\cite{fearnhead07online}.
 
 Regarding complexity, the storage of the posterior distribution has a
 memory cost of $O(n^2)$ and $O(n)$ computational cost. This might be
 prohibitive for huge datasets. For this reason, the distribution has
 to be approximated. A simple way sketched in \cite{adams07bayesian} is
-to discard values where the distribution is significantly low, i.e.
+to discard values where the distribution is significantly low, i.e.,
 lower than a given threshold. However, if we want to accurately
 estimate our distribution and control the computational costs, we use
 the \emph{particle filter} re-sampling concepts. At each time step, we
