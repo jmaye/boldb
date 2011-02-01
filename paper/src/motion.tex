@@ -45,11 +45,12 @@ The joint distribution in \eqref{eqn:posterior} can be expressed as
 
 \begin{eqnarray}
 \label{eqn:joint}
-p(r_t,\mathbf{z}_{1:t}) \hspace{-0.2cm}&=& \hspace{-0.35cm} \sum_{r_{t-1}}p(r_t,r_{t-1},\mathbf{z}_{1:t})\nonumber\\
-               &=& \hspace{-0.35cm} \sum_{r_{t-1}}p(r_t,\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{1:t-1})p(r_{t-1},
-                   \mathbf{z}_{1:t-1})\nonumber\\
-             &  = &  \hspace{-0.35cm}
-             \sum_{r_{t-1}}p(r_t\mid r_{t-1})p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{1:t-1})p(r_{t-1},\mathbf{z}_{1:t-1}).
+p(r_t,\mathbf{z}_{1:t})\hspace{-0.2cm}&=& \hspace{-0.35cm}\sum_{r_{t-1}}p(r_t,
+r_{t-1},\mathbf{z}_{1:t})\nonumber\\
+&=&\hspace{-0.35cm}\sum_{r_{t-1}}p(r_t,\mathbf{z}_t\mid r_{t-1},
+\mathbf{z}_{1:t-1})p(r_{t-1},\mathbf{z}_{1:t-1})\nonumber\\
+&=&\hspace{-0.35cm}\sum_{r_{t-1}}p(r_t\mid r_{t-1})p(\mathbf{z}_t\mid r_{t-1},
+\mathbf{z}_{1:t-1})p(r_{t-1},\mathbf{z}_{1:t-1}).
 \end{eqnarray}
 
 The right-hand side of \eqref{eqn:joint} consists of three terms: the
@@ -110,37 +111,60 @@ h(t) = \frac{\lambda\exp(-\lambda t)}{\exp(-\lambda t)} = \lambda.
 Thus, the hazard rate is constant and the process is ``memoryless''.
 Fig.~\ref{fig:transition} shows an example of transitions for $r_{t-1}$.
 
+%\begin{figure}[t]
+%\centering
+%\includegraphics[width=0.5\columnwidth]{fig/transition.eps}
+%\caption{Example of possible transitions for $r_{t-1}$.}
+%\label{fig:transition}
+%\end{figure}
+
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.5\columnwidth]{fig/transition.eps}
+\begin{tikzpicture}
+\tikzstyle{every node} = [circle,draw=blue!50,fill=blue!20,thick,
+inner sep=0pt,minimum size=15mm]
+\node (a) at (-1, 2) {$r_{t-1}=0$};
+\node (b) at (-1, 0) {$r_{t-1}=1$};
+\node (c) at (-1, -2) {$r_{t-1}=2$};
+\node (d) at (1, 2) {$r_t=0$};
+\node (e) at (1, 0) {$r_t=1$};
+\node (f) at (1, -2) {$r_t=2$};
+\draw [->,thick] (a) -- (d);
+\draw [->,thick] (a) -- (e);
+\draw [->,thick] (b) -- (d);
+\draw [->,thick] (b) -- (f);
+\draw [->,thick] (c) -- (d);
+\end{tikzpicture}
 \caption{Example of possible transitions for $r_{t-1}$.}
 \label{fig:transition}
 \end{figure}
 
 For the computation of the predictive distribution, we first note that it is
-only dependent on the data of the current segment. Thus, it can be expressed as
-$p(\mathbf{z}_t\mid r_{t-1}, \mathbf{z}_{b_n},\dots,\mathbf{z}_{t-1})$ where
-$b_n$ is the time step of the first data point in the current segment $s_n$. We
-compute the predictive distribution by marginalizing over the model parameters
-$\boldsymbol{\eta}_n$, i.e.
+only dependent on the data of the current segment $\mathbf{z}^{r_{t-1}}=
+[\mathbf{z}_{t-1}]$ in case $r_{t-1}=0$ and $\mathbf{z}^{r_{t-1}}=
+[\mathbf{z}_{t-1-r_{t-1}},\dots,\mathbf{z}_{t-1}]$ otherwise. Thus, it can
+be expressed as $p(\mathbf{z}_t\mid r_{t-1}, \mathbf{z}^{r_{t-1}})$. We finally
+introduce the model parameters $\boldsymbol{\eta}^{r_{t-1}}$ that are learned
+on the current segment. We compute the predictive distribution by marginalizing
+out the model parameters $\boldsymbol{\eta}^{r_{t-1}}$, i.e.
 
-\begin{equation}
+\begin{eqnarray}
 \label{eqn:preddistr}
-p(\mathbf{z}_t\mid r_{t-1},s_n,\boldsymbol{\psi}_n)=
-\int_{\boldsymbol{\eta}_{n}}p(\mathbf{z}_t\mid \boldsymbol{\eta}_{n})
-p(\boldsymbol{\eta}_{n}\mid r_{t-1},s_n,\boldsymbol{\psi}_n)
-d\boldsymbol{\eta}_{n}.
-\end{equation}
+p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}^{r_{t-1}},\boldsymbol{\psi}^{r_{t-1}})
+&=&\nonumber\\\int_{\boldsymbol{\eta}^{r_{t-1}}}
+p(\mathbf{z}_t\mid\boldsymbol{\eta}^{r_{t-1}})p(\boldsymbol{\eta}^{r_{t-1}}\mid
+r_{t-1},\mathbf{z}^{r_{t-1}},\boldsymbol{\psi}^{r_{t-1}})
+d\boldsymbol{\eta}^{r_{t-1}}.
+\end{eqnarray}
 
-Here, we used the shorthand notation $s_n$ for all the data points in the
-current segment and we added the prior hyperparameters $\boldsymbol{\psi}_{n}$
-for completeness. The integral in \eqref{eqn:preddistr} can be solved
-analytically if we model the prior of the parameter vector
-$\boldsymbol{\eta}_{n}$ as a conjugate to the probability density function
-$p(\mathbf{z}_t\mid \boldsymbol{\eta}_{n})$. Otherwise, this leads to expensive
-numerical computations. When the terms inside the integral are conjugate models,
-the marginal distribution is usually a function of the sufficient statistics
-which can be updated iteratively as data arrives.
+Here, we added the prior hyperparameters $\boldsymbol{\psi}^{r_{t-1}}$ for
+completeness. The integral in \eqref{eqn:preddistr} can be solved analytically
+if we model the prior of the parameter vector $\boldsymbol{\eta}^{r_{t-1}}$ as a
+conjugate to the probability density function $p(\mathbf{z}_t\mid
+\boldsymbol{\eta}^{r_{t-1}})$. Otherwise, this leads to expensive numerical
+computations. When the terms inside the integral are conjugate models, the
+marginal distribution is usually a function of the sufficient statistics which
+can be updated iteratively as data arrives.
 
 \subsection{Complexity and Approximate Inference}
 In order to exactly infer the positions of all change-points until time $t$, we
@@ -160,18 +184,18 @@ a \emph{particle filter}. The state-space of $r_t$ being discrete and the number
 of successor states being small, we can evaluate all the possible descendants of
 $r_t$. Indeed, if $r_t$ has $k$ possible values, $r_{t+1}$ will have $k+1$
 possible values. At each time step $t$, we approximate the posterior
-distribution with a set $\{r_t^{(i)},\boldsymbol{\psi}_{n}^{(i)}\}_{i=1}^M$ of
+distribution with a set $\{r_t^{(i)},\boldsymbol{\psi}^{r_{t-1},(i)}\}_{i=1}^M$ of
 $M$ particles weighted by $\{w_t^{(i)}\}_{i=1}^M$ with
 
 \begin{equation}
 \label{eqn:weight}
-w_t^{(i)} \propto p(\mathbf{z}_t\mid r_{t-1}^{(i)},s_n^{(i)},
-\boldsymbol{\psi}_{n}^{(i)}).
+w_t^{(i)} \propto p(\mathbf{z}_t\mid r_{t-1}^{(i)},\mathbf{z}^{r_{t-1},(i)},
+\boldsymbol{\psi}^{r_{t-1},(i)}).
 \end{equation}
 
-In order to limit the number of particles at each time-step, we use the
-Stratified Optimal Re-sampling (SOR) presented in~\cite{fearnhead07online}
-whenever $M$ is bigger than our particles number limit $N$.
+In order to limit the number of particles at each time step, we use the
+Stratified Optimal Re-sampling (SOR) presented in~\cite{fearnhead07online},
+whenever $M$ gets bigger than our particles number limit $N$.
 
 Using this method reduces the memory costs to $O(n)$ and the computational costs
 to $O(1)$, i.e. constant run-time. We also notice that this particle filter is
@@ -182,27 +206,27 @@ sampling space of the state is reduced to $r_t$ and the rest is marginalized out
 In our particular case, data comes from an IMU and we consider accelerations in
 the three standard axes $x,y,z$, with $x$ pointing forward, $y$ on the left, and
 $z$ upward. We can safely assume that an IMU measurement $\mathbf{z}_t$ arises
-from a multivariate normal distribution with mean $\boldsymbol{\mu}_t$ and
-covariance matrix $\boldsymbol{\Sigma}_t$. The parameter vector for segment
-$s_n$ is thus
-$\boldsymbol{\eta}_{n}=\{\boldsymbol{\mu}_t,\boldsymbol{\Sigma}_t\}$. In order
-to solve the integral in (\ref{eqn:preddistr}) analytically, we model the
-parameter prior as a normal-Wishart distribution which is conjugate to the
-multivariate Gaussian. This distribution has four hyperparameters
-$\boldsymbol{\psi}_{n}=\{\kappa_t,\boldsymbol{\rho}_t,\nu_t,
-\boldsymbol{\Lambda}_t\}$ that can be updated iteratively as a new data point
-$\mathbf{z}_t$ arrives with:
+from a multivariate normal distribution with mean $\boldsymbol{\mu}_n$ and
+covariance matrix $\boldsymbol{\Sigma}_n$ for segment $s_n$. The parameter
+vector for segment $r_t$ is thus $\boldsymbol{\eta}^{r_{t}}=
+\{\boldsymbol{\mu}^{r_{t}},\boldsymbol{\Sigma}^{r_{t}}\}$. In order to solve
+the integral in (\ref{eqn:preddistr}) analytically, we model the parameter prior
+as a normal-Wishart distribution which is conjugate to the multivariate
+Gaussian. This distribution has four hyperparameters
+$\boldsymbol{\psi}^{r_{t-1}}=\{\kappa^{r_{t-1}},\boldsymbol{\rho}^{r_{t-1}},
+\nu^{r_{t-1}},\boldsymbol{\Lambda}^{r_{t-1}}\}$ that can be updated iteratively
+as a new data point $\mathbf{z}_t$ arrives with:
 
 \begin{eqnarray}
 \label{eqn:hyperupdate}
-\kappa_t &=& \kappa_{t-1} + 1\nonumber\\
-  \boldsymbol{\rho}_t &=& \frac{\kappa_{t-1}\;\boldsymbol{\rho}_{t-1} +
-\mathbf{z}_t}{\kappa_{t-1} + 1}\nonumber\\
-\nu_t &=& \nu_{t-1} + 1\nonumber\\
-\boldsymbol{\Lambda}_t &=& \boldsymbol{\Lambda}_{t-1} +
-  \frac{\kappa_{t-1}}{\kappa_{t-1} + 1}
-  (\mathbf{z}_t - \boldsymbol{\rho}_{t-1})
-  (\mathbf{z}_t - \boldsymbol{\rho}_{t-1})^\intercal.
+\kappa^{r_{t}}&=&\kappa^{r_{t-1}}+1\nonumber\\
+\boldsymbol{\rho}^{r_{t}}&=&\frac{\kappa^{r_{t-1}}\;
+\boldsymbol{\rho}^{r_{t-1}}+\mathbf{z}_t}{\kappa^{r_{t-1}}+1}\nonumber\\
+\nu^{r_{t}}&=&\nu^{r_{t-1}}+1\nonumber\\
+\boldsymbol{\Lambda}^{r_{t}}&=&\boldsymbol{\Lambda}^{r_{t-1}}+
+\frac{\kappa^{r_{t-1}}}{\kappa^{r_{t-1}} + 1}
+(\mathbf{z}_t - \boldsymbol{\rho}^{r_{t-1}})
+(\mathbf{z}_t - \boldsymbol{\rho}^{r_{t-1}})^\intercal.
 \end{eqnarray}
 
 From (\ref{eqn:hyperupdate}), we can express the parameters of the
@@ -210,8 +234,8 @@ multivariate normal distribution as
 
 \begin{eqnarray}
 \label{eqn:ssmvn}
-\boldsymbol{\mu}_t &=& \boldsymbol{\rho}_t\nonumber\\
-\boldsymbol{\Sigma}_t &=& \boldsymbol{\Lambda}_t^{-1} / \kappa_t.
+\boldsymbol{\mu}^{r_{t}}&=&\boldsymbol{\rho}^{r_{t}}\nonumber\\
+\boldsymbol{\Sigma}^{r_{t}}&=&\text{inv}(\boldsymbol{\Lambda}^{r_{t}})/\kappa^{r_{t}}.
 \end{eqnarray}
 
 Finally, for the computation of the predictive distribution in
