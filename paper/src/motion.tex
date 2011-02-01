@@ -30,15 +30,7 @@ distribution can be written as
 
 \begin{equation}
 \label{eqn:posterior}
-p(r_t\mid \mathbf{z}_{1:t})=
-  \frac{p(r_t,\mathbf{z}_{1:t})}{p(\mathbf{z}_{1:t})},
-\end{equation}
-
-with the normalizer
-
-\begin{equation}
-\label{eqn:normalizer}
-p(\mathbf{z}_{1:t}) = \sum_{r_t}p(r_t,\mathbf{z}_{1:t}).
+p(r_t\mid \mathbf{z}_{1:t})\propto p(r_t,\mathbf{z}_{1:t})p(\mathbf{z}_{1:t}).
 \end{equation}
 
 The joint distribution in \eqref{eqn:posterior} can be expressed as
@@ -213,8 +205,8 @@ vector for segment $r_t$ is thus $\boldsymbol{\eta}^{r_{t}}=
 the integral in (\ref{eqn:preddistr}) analytically, we model the parameter prior
 as a normal-Wishart distribution which is conjugate to the multivariate
 Gaussian. This distribution has four hyperparameters
-$\boldsymbol{\psi}^{r_{t-1}}=\{\kappa^{r_{t-1}},\boldsymbol{\rho}^{r_{t-1}},
-\nu^{r_{t-1}},\boldsymbol{\Lambda}^{r_{t-1}}\}$ that can be updated iteratively
+$\boldsymbol{\psi}^{r_{t}}=\{\kappa^{r_{t}},\boldsymbol{\rho}^{r_{t}},
+\nu^{r_{t}},\boldsymbol{\Lambda}^{r_{t}}\}$ that can be updated iteratively
 as a new data point $\mathbf{z}_t$ arrives with:
 
 \begin{eqnarray}
@@ -228,6 +220,9 @@ as a new data point $\mathbf{z}_t$ arrives with:
 (\mathbf{z}_t - \boldsymbol{\rho}^{r_{t-1}})
 (\mathbf{z}_t - \boldsymbol{\rho}^{r_{t-1}})^\intercal.
 \end{eqnarray}
+
+In case we start a new segment and $r_t=0$, the hyperparameters are fixed to
+some prior values.
 
 From (\ref{eqn:hyperupdate}), we can express the parameters of the
 multivariate normal distribution as

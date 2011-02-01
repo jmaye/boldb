@@ -6,67 +6,69 @@ we can integrate this labeling into the on-line framework of
 Section~\ref{sec:motion}.
 
 \subsection{Traffic Situation Model}
-We denote the label of a segment $r$ at time $t$ as $x_t^{(r)}$. This
-label can take values in $[1,2,\dots,N]$ corresponding to $N$
-parametric models $M_1,M_2,\dots,M_N$. Each of the $M_i$ is a
-generative model $p(\mathbf{z}_t\mid\boldsymbol{\eta}_i)$ for a
-particular traffic situation with parameter vector
-$\boldsymbol{\eta}_i$. At time $t$, we estimate the distribution over
-the known models conditioned on the data seen so far and the segment
-we are in with the product rule as
+As shown above, we denote the label of a segment $r_t$ as $l_t$. This label can
+take values in $[1,2,\dots,N]$ corresponding to $N$ parametric models $M_1,M_2,
+\dots,M_N$. Each of the $M_i$ is a generative model $p(\mathbf{c}_t\mid
+\boldsymbol{\eta}_i)$ for a particular traffic situation with parameter vector
+$\boldsymbol{\eta}_i$. At time $t$, we estimate the distribution over the known
+models conditioned on the data seen so far and the segment we are in with the
+product rule as
 
 \begin{eqnarray}
 \label{eqn:labeling}
-p(x_t^{(r)}\mid \mathbf{z}_{1:t},r_t) &=& \frac{p(\mathbf{z}_{1:t}\mid x_t^r,r_t)p(x_t^r\mid r_t)}
-  {p(\mathbf{z}_{1:t}\mid r_t)}\nonumber\\
-                         &=& \frac{p(\mathbf{z}_t^{(r)}\mid x_t^{(r)},r_t)p(x_t^{(r)}\mid r_t)}
-  {p(\mathbf{z}_t^{(r)}\mid r_t)},
+p(l_t\mid r_t,\mathbf{c}_{1:t})&\propto&p(\mathbf{c}_{1:t}\mid l_t,r_t)
+p(l_t\mid r_t)\nonumber\\
+&=& p(\mathbf{c}^{r_t}\mid l_t,r_t)p(l_t\mid r_t),
 \end{eqnarray}
-with the same assumption as in Sec.~\ref{sec:motion} about data
-validity, i.e. we consider only data within the current segment.
 
-For the prior part in (\ref{eqn:labeling}), we use the posterior of the previous
+where $\mathbf{c}^{r_t}$ represents data on the current segment $r_t$.
+
+For the prior part in \eqref{eqn:labeling}, we use the posterior of the previous
 time step, that is
-$p(x_t^r\mid r_t)=p(x_{t-1}^r\mid \mathbf{z}_{t-1}^r,r_{t-1})$. If we are in a new
+$p(l_t\mid r_t)=p(l_{t-1}\mid r_{t-1},\mathbf{c}^{r_{t-1}})$. If we are in a new
 segment with $r_t=0$, we set the prior to a uniform distribution over the known
-models. The data likelihood is computed with the model distributions
-$p(\mathbf{z}_t\mid \boldsymbol{\eta}_i)$ in the same fashion as in Sec.~\ref{sec:motion}.
+models. The likelihood part in \eqref{eqn:labeling} is computed with the model
+probability density function $p(\mathbf{c}_t\mid \boldsymbol{\eta}_i)$ in the
+same fashion as in \eqref{eqn:preddistr}, i.e., using a conjugate prior with
+hyperparameters $\boldsymbol{\psi}_i$ as will be detailed below.
 
-As we want to be able to discover new traffic situations on-line, we
-have to state if the current data $\mathbf{z}_t$ is unlikely to come
-from any of the $N$ known models so far. We use statistical hypothesis
-testing for this. At each time step, we thus perform $N$ statistical
-test. The likelihood ratio test is suitable for our purpose. We
-compare model $M_i$ with a model learned over segment $r$. The test
-statistic is
+As we want to be able to discover new traffic situations on-line, we have to
+state if the current data $\mathbf{c}_t$ is unlikely to come from any of the
+$N$ known models so far. We use statistical hypothesis testing for this. At each
+time step, we thus perform $N$ statistical test. The likelihood ratio test is
+suitable for our purpose. We compare model $M_i$ with a model learned over
+segment $r_t$. The test statistic is
 
 \begin{equation}
 \label{eqn:statistic}
-D = -2\ln\frac{p(\mathbf{z}_t\mid \boldsymbol{\eta}_i)}{p(\mathbf{z}_t\mid \boldsymbol{\eta}_{ml})},
+D = -2\ln\frac{p(\mathbf{c}_t\mid \boldsymbol{\psi}_i)}{p(\mathbf{c}_t\mid
+\boldsymbol{\psi}_{ml})},
 \end{equation}
-where $\boldsymbol{\eta}_{ml}$ is the maximum likelihood solution for
-$\boldsymbol{\eta}$ over the current segment $r$.
 
-Based on the value of $D$, we have to decide whether to accept or
-reject the null hypothesis, i.e. data in segment $r$ arises from model
-$M_i$. It is shown that when the sample size grows towards infinity,
-$D$ converges towards a Chi-square distribution with $K-1$ degrees of
-freedom, where $K$ is the dimension of $\boldsymbol{\eta}$. In our
-case, the sample size represents the number of data used to compute
-the maximum likelihood solution. As will be shown below, it will be
-sufficient to approximate $D$ with a Chi-square distribution.  We will
-thus compare $D$ to the Chi-square value corresponding to the desired
-statistical significance $\xi$ of the null hypothesis. In practice,
+where $\boldsymbol{\psi}_{ml}$ is the maximum likelihood solution for
+$\boldsymbol{\psi}$ over the current segment $r_t$.
+
+Based on the value of $D$, we have to decide whether to accept or reject the
+null hypothesis, i.e., data in segment $r_t$ arises from model $M_i$. It is
+shown that when the sample size grows towards infinity, $D$ converges towards a
+Chi-square distribution with $K-1$ degrees of freedom, where $K$ is the
+dimension of $\boldsymbol{\psi}$. In our case, the sample size represents the
+number of data used to compute the maximum likelihood solution. As will be
+shown below, it will be sufficient to approximate $D$ with a Chi-square
+distribution. We will thus compare $D$ to the Chi-square value corresponding to
+the desired statistical significance $\xi$ of the null hypothesis. In practice,
 this is done by computing the value of the cumulative distribution
 function of the Chi-square distribution for $D$ and reject the model
 $M_i$ if it is below $\xi$.
 
 In case all models are rejected, we create a new instance $M_{N+1}$
-with parameter vector $\boldsymbol{\eta}_{ml}$, set $p(x_{N+1}\mid
-\mathbf{z}_t^{(r)},r_t)=p_{new}$, and $p(x_{i=1:N}\mid
-\mathbf{z}_t^{(r)},r_t)=(1-p_{new})/N$. If a model $M_i$ is accepted
-by the statistical test, we update its parameters vector
-$\boldsymbol{\eta}_i$ with $\mathbf{z}_t$.
+with hyperparameter vector $\boldsymbol{\psi}_{ml}$, set $p(l_t=N+1\mid r_t,
+\mathbf{c}^{r_t})=p_{new}$, and $p(l_t=1:N\mid r_t,\mathbf{c}^{r_t})=
+(1-p_{new})/N$. We update the hyperparameters $\boldsymbol{\psi}_i$ of model
+$M_i$, such that $i=\text{argmax}_{j=1:N}p(l_t=j\mid
+r_t,\mathbf{c}^{r_t})$, with $\mathbf{c}_t$.
+
+A PARAGRAPH SUMMARIZING THE STORY!
 
 \subsection{Measurements Representation}
 We represent images using the widely used \emph{bag-of-words}
