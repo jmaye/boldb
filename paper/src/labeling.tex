@@ -73,9 +73,21 @@ From an implementation point of view, we attach the distribution
 incremental set of known models $M_i$ to each particle.
 
 \subsection{Measurements Representation}
-We represent images using the widely used \emph{bag-of-words}
-approach
-. A regular grid cuts an image into local patches on
+We represent images using the widely adopted \emph{bag-of-words}
+model~\cite{sivic03video}. In the document modeling formulation, text documents
+are represented as histograms of word counts from a given vocabulary. This model
+can be easily applied to computer vision tasks, words being replaced by features
+and text documents by images.
+
+We use Scale-Invariant Feature Transform (SIFT)~\cite{lowe04distinctive}
+descriptors computed at Difference of Gaussians (DoG) keypoints. SIFT
+descriptors have been shown to be highly discriminative for object recognition.
+Although some authors claim that they obtain better results with dense
+grid~\cite{feifei05bayesian} representations, DoG interest points are more
+suitable for our purpose. Indeed, we are not interested in capturing uniform
+regions such as sky, but rather focused on objects.
+
+A regular grid cuts an image into local patches on
 which features are computed.  We use a patch size of $l\times l$ and
 Scale-Invariant Feature Transform (SIFT) \cite{lowe04distinctive}
 descriptors as they have been shown to be highly discriminative for
@@ -84,14 +96,6 @@ dataset to build a \emph{codebook} or dictionary of features using
 K-means clustering. Each patch of an image is then assigned to the
 nearest \emph{codeword} of the dictionary and we can therefore build a
 convenient histogram representation.
-
-As one can imagine, we lose spatial relationship between the features of an
-image with this kind of representation. Therefore, we can compute histograms of
-features at different scales as in \cite{lazebnik06beyond} with the
-\emph{spatial pyramid} approach. It is worth noting that histograms only have to
-be extracted at the finer levels since the coarser levels are just summations of
-these. We term the number of levels in the pyramid as $L$, with $L=0$
-representing the entire image.
 
 The link between bag-of-\emph{features} models in computer vision and
 bag-of-words model in text modeling is intuitive. We can therefore use
