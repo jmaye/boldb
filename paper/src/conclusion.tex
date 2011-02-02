@@ -1,18 +1,21 @@
-In this paper, we have presented a novel approach to on-line learning of driving
-behaviors. To this end, we have developed an entire Bayesian framework that is
-able to learn and adapt to new situations. For computational and storage
+In this paper, we have presented a novel approach for on-line learning of driving
+behaviors in an usupervised fashon. To this end, we have developed an entire Bayesian framework that is
+able to learn and adapt to new traffic situations. For computational and storage
 purposes, we have approximated the full posterior distribution with a
-Rao-Blackwellized particle filter. We have shown an original application of the
-change-point detection model of~\cite{adams07bayesian} and
-\cite{fearnhead07online} to the segmentation of IMU data with a clearer
-formulation. Visual traffic situations models have been learned
-probabilistically from images and linked to an action model from IMU data. Our
+Rao-Blackwellized particle filter. Visual traffic situations models have been learned
+probabilistically from image streams and associated to motion segments in IMU data. Our
 system is suitable for lifelong learning since it is able to continuously update
-its models. We have conducted experiments on a challenging urban dataset and
-validated our approach.
+its models. 
+We quantified the usefulness and the performance of this approach on a challenging 
+urban dataset.
 
-In the near future, we aim at improving our image representation with a more
-sophisticated model. In particular, we want to consider images as an histogram
-of objects rather than features. We aspire to determine which objects in the
-scene influence an action. Our second mid-term goal is to deploy our system in
-a car and have a real-time driving assistant.
+% In the near future, we aim at improving our image representation with a more
+% sophisticated model. We aim to determine which objects in the
+% scene influence an action.
+% 
+% 
+% In the near future, we aim at improving our image representation with a more
+% sophisticated model. In particular, we want to consider images as an histogram
+% of objects rather than features. We aspire to determine which objects in the
+% scene influence an action. Our second mid-term goal is to deploy our system in
+% a car and have a real-time driving assistant.
