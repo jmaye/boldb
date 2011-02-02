@@ -65,10 +65,12 @@ In case all models are rejected, we create a new instance $M_{N+1}$
 with hyperparameter vector $\boldsymbol{\psi}_{ml}$, set $p(l_t=N+1\mid r_t,
 \mathbf{c}^{r_t})=p_{new}$, and $p(l_t=1:N\mid r_t,\mathbf{c}^{r_t})=
 (1-p_{new})/N$. We update the hyperparameters $\boldsymbol{\psi}_i$ of model
-$M_i$, such that $i=\text{argmax}_{j=1:N}p(l_t=j\mid
+$M_i$, such that $i=\argmax_{j=1:N}p(l_t=j\mid
 r_t,\mathbf{c}^{r_t})$, with $\mathbf{c}_t$.
 
-A PARAGRAPH SUMMARIZING THE STORY!
+From an implementation point of view, we attach the distribution
+\eqref{eqn:labeling}, the hyperparameters $\boldsymbol{\psi}_{ml}$, and the
+incremental set of known models $M_i$ to each particle.
 
 \subsection{Measurements Representation}
 We represent images using the widely used \emph{bag-of-words}
@@ -141,9 +143,3 @@ leads to the update rule
 
 where $\Psi(.)$ is the digamma function and $D$ the number of data points
 $\mathbf{z}$ used for the estimation.
-
-In practice, each model $M_i$ is represented by a DCM with parameters vector
-$\boldsymbol{\alpha_i}$. The model parameters are learned from the data using
-the iterative update rule (\ref{eqn:alpha_update}) and the likelihood term of
-(\ref{eqn:labeling}) is evaluated with (\ref{eqn:polya_integrated}). The
-distribution (\ref{eqn:labeling}) is computed for each particle and stored.
