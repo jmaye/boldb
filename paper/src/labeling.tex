@@ -42,10 +42,10 @@ segment $r_t$. The test statistic is
 \begin{equation}
 \label{eqn:statistic}
 D = -2\ln\frac{p(\mathbf{c}_t\mid \boldsymbol{\psi}_i)}{p(\mathbf{c}_t\mid
-\boldsymbol{\psi}_{ml})},
+\boldsymbol{\psi}^{r_t})},
 \end{equation}
 
-where $\boldsymbol{\psi}_{ml}$ is the maximum likelihood solution for
+where $\boldsymbol{\psi}^{r_t}$ is the maximum likelihood solution for
 $\boldsymbol{\psi}$ over the current segment $r_t$.
 
 Based on the value of $D$, we have to decide whether to accept or reject the
@@ -62,15 +62,17 @@ function of the Chi-square distribution for $D$ and reject the model
 $M_i$ if it is below $\xi$.
 
 In case all models are rejected, we create a new instance $M_{N+1}$
-with hyperparameter vector $\boldsymbol{\psi}_{ml}$, set $p(l_t=N+1\mid r_t,
+with hyperparameter vector $\boldsymbol{\psi}^{r_t}$, set $p(l_t=N+1\mid r_t,
 \mathbf{c}^{r_t})=p_{new}$, and $p(l_t=1:N\mid r_t,\mathbf{c}^{r_t})=
 (1-p_{new})/N$. We update the hyperparameters $\boldsymbol{\psi}_i$ of model
 $M_i$, such that $i=\argmax_{j=1:N}p(l_t=j\mid
 r_t,\mathbf{c}^{r_t})$, with $\mathbf{c}_t$.
 
 From an implementation point of view, we attach the distribution
-\eqref{eqn:labeling}, the hyperparameters $\boldsymbol{\psi}_{ml}$, and the
-incremental set of known models $M_i$ to each particle.
+\eqref{eqn:labeling}, the hyperparameters $\boldsymbol{\psi}^{r_t}$, and the
+incremental set of known models $M_i$ to each particle. Thus, our system is able
+to learn new traffic situations on-line and refine its knowledge over
+previously visited scenes.
 
 \subsection{Measurements Representation}
 We represent images using the widely adopted \emph{bag-of-words}
