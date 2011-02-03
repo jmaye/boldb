@@ -11,8 +11,8 @@ take values in $[1,2,\dots,N]$ corresponding to $N$ parametric models $M_1,M_2,
 \dots,M_N$. Each of the $M_i$ is a generative model $p(\mathbf{c}_t\mid
 \boldsymbol{\eta}_i)$ for a particular traffic situation with parameter vector
 $\boldsymbol{\eta}_i$. At time $t$, we estimate the distribution over the known
-models conditioned on the data seen so far and the segment we are in with the
-product rule as
+models conditioned on the data seen so far and the segment we are in with Bayes
+law as
 
 \begin{eqnarray}
 \label{eqn:labeling}

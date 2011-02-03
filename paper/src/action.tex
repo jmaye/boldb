@@ -1,19 +1,19 @@
 We want to estimate the posterior probability distribution over actions
-conditioned on the current traffic situation. To this end, we closely follow the
-strategy of Sec.\ref{sec:labeling}. To each of the traffic situation model $M_i$
-is associated an action model $A_i$. This action model $A_i$ is itself a
-parametric distribution $p(\mathbf{a}_t\mid\boldsymbol{\eta}_i)$ with parameter
-vector $\boldsymbol{\eta}_i$ from which we can sample an acceleration
-$\mathbf{a_t}$. This acceleration represents a possible action of the model
-$A_i$. We can thus formulate the following model that we estimate and update
-at each time step:
+conditioned on the current traffic situation and segment. To this end, we
+closely follow the strategy of Section~\ref{sec:labeling}. To each of the
+traffic situation model $M_i$ is associated an action model $A_i$. This action
+model $A_i$ is itself a parametric distribution $p(\mathbf{a}_t\mid
+\boldsymbol{\eta}_i)$ with parameter vector $\boldsymbol{\eta}_i$ from which we
+can sample an acceleration $\mathbf{a_t}$. This acceleration represents a
+possible action of the model $A_i$. We can thus formulate the following model
+that we estimate and update at each time step:
 
 \begin{equation}
 \label{eqn:action}
-p(\mathbf{a_t} \mid x_t,\mathbf{z}_{1:t},r_t).
+p(\mathbf{a_t} \mid r_t, l_t)=\sum_{\mathbf{c}_t} p(\mathbf{c}_t)p(\mathbf{a}_t\mid\mathbf{c}_t,r_t,l_t,\boldsymbol{\psi}^{\mathbf{c}_t})
 \end{equation}
 
-The distribution of (\ref{eqn:action}) is a Gaussian Mixture Model (GMM) and
+The distribution of \eqref{eqn:action} is a Gaussian Mixture Model (GMM) and
 we apply on-line estimation whenever we receive a new data point. For the same
 traffic situation $M_i$, we are able to model several possible behaviors
 with (\ref{eqn:action})corresponding to the different Gaussian components. For
@@ -22,11 +22,3 @@ and continue when it is green. Moreover, a driver does not always brake or
 accelerate exactly the same manner every time. Finally, our system can adapt
 to new drivers. In the same fashion as for Sec.\ref{sec:labeling}, we augment
 each particle with the distribution (\ref{eqn:action}).
-
-A possible practical use of our algorithm could be in action prediction in
-urban settings to assist a car driver. To implement this, the most probable
-current segment $r_t$ is first sampled from $p(r_t\mid \mathbf{z}_{1:t})$
-(Sec.\ref{sec:motion}). From $r_t$, the most probable situation model is
-sampled from $p(x_t^{(r)}\mid \mathbf{z}_{1:t},r_t)$ (Sec.\ref{sec:action}). And
-finally, the most probable action is inferred from
-$p(\mathbf{a_t} \mid x_t,\mathbf{z}_{1:t},r_t)$.
