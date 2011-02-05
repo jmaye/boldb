@@ -1,24 +1,34 @@
 We want to estimate the posterior probability distribution over actions
 conditioned on the current traffic situation and segment. To this end, we
 closely follow the strategy of Section~\ref{sec:labeling}. To each of the
-traffic situation model $M_i$ is associated an action model $A_i$. This action
-model $A_i$ is itself a parametric distribution $p(\mathbf{a}_t\mid
-\boldsymbol{\eta}_i)$ with parameter vector $\boldsymbol{\eta}_i$ from which we
-can sample an acceleration $\mathbf{a_t}$. This acceleration represents a
-possible action of the model $A_i$. We can thus formulate the following model
+traffic situation model $M_i$ is associated an action model $A_i$, which we fit
+with a Gaussian Mixture Model (GMM). For the same traffic situation $M_i$, we
+are able to model several possible behaviors corresponding to the different
+Gaussian components. For instance, when we reach a traffic light, we might brake
+when the light is red and continue when it is green. Moreover, a driver does not
+always brake or accelerate exactly the same manner every time. Finally, our
+system can adapt to new drivers. We can thus formulate the following model
 that we estimate and update at each time step:
 
 \begin{equation}
 \label{eqn:action}
-p(\mathbf{a_t} \mid r_t, l_t)=\sum_{\mathbf{c}_t} p(\mathbf{c}_t)p(\mathbf{a}_t\mid\mathbf{c}_t,r_t,l_t,\boldsymbol{\psi}^{\mathbf{c}_t})
+p(\mathbf{a_t} \mid r_t, l_t,\boldsymbol{\psi}^{\mathbf{x}_t})=
+\sum_{\mathbf{x}_t} p(\mathbf{x}_t)p(\mathbf{a}_t\mid\mathbf{x}_t,r_t,l_t,
+\boldsymbol{\psi}^{\mathbf{x}_t}),
 \end{equation}
 
-The distribution of \eqref{eqn:action} is a Gaussian Mixture Model (GMM) and
-we apply on-line estimation whenever we receive a new data point. For the same
-traffic situation $M_i$, we are able to model several possible behaviors
-with (\ref{eqn:action})corresponding to the different Gaussian components. For
-instance, when we reach a traffic light, we might brake when the light is red
-and continue when it is green. Moreover, a driver does not always brake or
-accelerate exactly the same manner every time. Finally, our system can adapt
-to new drivers. In the same fashion as for Sec.\ref{sec:labeling}, we augment
-each particle with the distribution (\ref{eqn:action}).
+where $\mathbf{x}_t$ is a $K$-dimensional vector with a $1$ at the position $k$
+if the $k$-th Gaussian is selected, $p(\mathbf{x}_t)$ is the prior for selecting
+a particular Gaussian, and $p(\mathbf{a}_t\mid\mathbf{x}_t,r_t,l_t,
+\boldsymbol{\psi}^{\mathbf{x}_t})$ is a Gaussian distribution with
+hyperparameters $\boldsymbol{\psi}^{\mathbf{x}_t}$. In a similar fashion as in
+Section~\ref{sec:motion}, we have marginalized out the parameters of the
+Gaussian and we are thus able to iteratively update the hyperparameters.
+
+JUST A DRAFT TO GIVE THE IDEA:
+Upon reception of a new data point $\mathbf{z}_t$, we perform the likelihood
+ratio test on the Gaussian components. If all the components are rejected, a new
+Gaussian is created. The most likely Gaussian component gets its hyperparameters
+updated. Another method would be to use the background modeling of Stauffer, i.e.
+checking that the distance of a point to a Gaussian center is bigger than
+$2*\sigma$. Another method is to use Mixture of Dirichlet Process.
