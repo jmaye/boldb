@@ -27,17 +27,17 @@ For the prior part in \eqref{eqn:labeling}, we use the posterior of the previous
 time step, that is
 $p(l_t\mid r_t)=p(l_{t-1}\mid r_{t-1},\mathbf{c}^{r_{t-1}})$. If we are in a new
 segment with $r_t=0$, we set the prior to a uniform distribution over the known
-models. The likelihood part in \eqref{eqn:labeling} is computed with the model
-probability density function $p(\mathbf{c}_t\mid \boldsymbol{\eta}_i)$ in the
-same fashion as in \eqref{eqn:preddistr}, i.e., using a conjugate prior with
-hyperparameters $\boldsymbol{\psi}_i$ as will be detailed below.
+models, i.e., $p(l_t=1:N\mid r_t)=\frac{1}{N}$. The likelihood part in
+\eqref{eqn:labeling} is computed with the model probability density function
+$p(\mathbf{c}_t\mid \boldsymbol{\eta}_i)$ in the same fashion as in
+\eqref{eqn:preddistr}, i.e., using a conjugate prior with hyperparameters
+$\boldsymbol{\psi}_i$ as will be detailed below.
 
 As we want to be able to discover new traffic situations on-line, we have to
 state if the current data $\mathbf{c}_t$ is unlikely to come from any of the
-$N$ known models so far. We use statistical hypothesis testing for this. At each
-time step, we thus perform $N$ statistical test. The likelihood ratio test is
-suitable for our purpose. We compare model $M_i$ with a model learned over
-segment $r_t$. The test statistic is
+$N$ known models so far. Following the strategy of~\cite{ranganathan10pliss},
+we perform $N$ likelihood ratio test at each time step. We compare model $M_i$
+with a model learned over segment $r_t$. The test statistic is
 
 \begin{equation}
 \label{eqn:statistic}
