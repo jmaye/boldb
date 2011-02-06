@@ -7,28 +7,31 @@ are able to model several possible behaviors corresponding to the different
 Gaussian components. For instance, when we reach a traffic light, we might brake
 when the light is red and continue when it is green. Moreover, a driver does not
 always brake or accelerate exactly the same manner every time. Finally, our
-system can adapt to new drivers. We can thus formulate the following model
-that we estimate and update at each time step:
+system can adapt to new drivers. We can thus formulate the following model that
+we estimate and update at each time step:
 
 \begin{equation}
 \label{eqn:action}
-p(\mathbf{a_t} \mid r_t, l_t,\boldsymbol{\psi}^{\mathbf{x}_t})=
+p(\mathbf{a_t} \mid r_t, l_t,\mathbf{z}_{1:t},\boldsymbol{\psi}^{\mathbf{x}_t})=
 \sum_{\mathbf{x}_t} p(\mathbf{x}_t)p(\mathbf{a}_t\mid\mathbf{x}_t,r_t,l_t,
-\boldsymbol{\psi}^{\mathbf{x}_t}),
+\mathbf{z}_{1:t},\boldsymbol{\psi}^{\mathbf{x}_t}),
 \end{equation}
 
 where $\mathbf{x}_t$ is a $K$-dimensional vector with a $1$ at the position $k$
 if the $k$-th Gaussian is selected, $p(\mathbf{x}_t)$ is the prior for selecting
 a particular Gaussian, and $p(\mathbf{a}_t\mid\mathbf{x}_t,r_t,l_t,
-\boldsymbol{\psi}^{\mathbf{x}_t})$ is a Gaussian distribution with
+\mathbf{z}_{1:t},\boldsymbol{\psi}^{\mathbf{x}_t})$ is a Gaussian distribution with
 hyperparameters $\boldsymbol{\psi}^{\mathbf{x}_t}$. In a similar fashion as in
 Section~\ref{sec:motion}, we have marginalized out the parameters of the
 Gaussian and we are thus able to iteratively update the hyperparameters.
 
-JUST A DRAFT TO GIVE THE IDEA:
 Upon reception of a new data point $\mathbf{z}_t$, we perform the likelihood
 ratio test on the Gaussian components. If all the components are rejected, a new
 Gaussian is created. The most likely Gaussian component gets its hyperparameters
-updated. Another method would be to use the background modeling of Stauffer, i.e.
-checking that the distance of a point to a Gaussian center is bigger than
-$2*\sigma$. Another method is to use Mixture of Dirichlet Process.
+and corresponding $p(\mathbf{x}_t)$ updated.
+
+From an implementation point of view, the distribution~\eqref{eqn:action} and
+the learned GMM $A_i$ are attached to the particle filter of
+Section~\ref{sec:motion}.
+
+THIS SECTION NEEDS SOME MORE STUFF.

@@ -187,7 +187,7 @@ w_t^{(i)} \propto p(\mathbf{z}_t\mid r_{t-1}^{(i)},\mathbf{z}^{r_{t-1},(i)},
 
 In order to limit the number of particles at each time step, we use the
 Stratified Optimal Re-sampling (SOR) presented in~\cite{fearnhead07online},
-whenever $M$ gets bigger than our particles number limit $N$.
+whenever $M$ gets bigger than our particles number limit $P$.
 
 Using this method reduces the memory costs to $O(n)$ and the computational costs
 to $O(1)$, i.e. constant run-time. We also notice that this particle filter is

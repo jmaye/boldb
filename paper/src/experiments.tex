@@ -9,36 +9,29 @@ several times in the same situation and thus have an evaluation of the quality
 of our solution.
 
 \subsection{Motion Segmentation}
-In this first experiment, we want to estimate the quality of our
-motion segmentation algorithm. After running the framework presented
-in Sec.~\ref{sec:motion}-\ref{sec:action}, we performed inference on
-the final posterior distribution $p(r_t\mid z_{1:t})$ to get the
-optimal sequence of segments length which represents our motion
-segments. We set the hazard rate to $\lambda=1/10$, the number of
-particles to $P=100$, and the prior hyper-parameters of the
-Normal-Wishart to $\kappa_0=1, \boldsymbol{\mu}_0= \mathbf{0},\nu_0=3,
-\boldsymbol{\Lambda}_0=\mathbf{I}$. For motion segmentation, we only
-consider IMU data at $10$ Hz.
+In this first experiment, we want to estimate the quality of our motion
+segmentation algorithm. After running the framework presented in
+Sections~\ref{sec:formulation}-\ref{sec:action}, we performed inference on the
+final posterior distribution $p(r_t\mid \mathbf{z}_{1:t})$ to get the optimal
+sequence of segments length which represents our motion segments. We set the
+hazard rate to $\lambda=1/10$, the number of particles to $P=100$, and the prior
+hyperparameters of the Normal-Wishart to $\kappa_0=1,
+\boldsymbol{\rho}_0=\mathbf{0},\nu_0=3,\boldsymbol{\Lambda}_0=\mathbf{I}$. For
+motion segmentation, we only consider IMU data at $10$ Hz.
 
 Fig.~\ref{fig:motion_segments} shows the extracted motion segments along with
 the corresponding IMU data. Our algorithm identified $113$ segments which are
 validated by visual inspection of the IMU data and corresponding images.
 Furthermore, the segmentation has been compared to a manual annotation of our
-image sequence and exhibited an accuracy of about $95\%$. As a
-comparison, we show the segmentation results obtained using the method
-of~\cite{ranganathan10pliss}. This algorithm uses only images to decide on the
-segments length and appears to be definitely less robust on this dataset.
-Self-similarity is indeed an issue in urban environments and boundaries in an
-image sequence are often unclear.
+image sequence and exhibited an accuracy of about $95\%$.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{fig/cpDetect.eps}
 \caption{Optimal motion segmentation from IMU data. The three top plots are the
-  IMU raw values over time. The two bottom plots depict the motion segments
-  discovered by our algorithm (top) and by \cite{ranganathan10pliss} (bottom).
-  The $y$ axis of the motion segments plots represent the current segment
-  length in time steps of the algorithm.}
+IMU raw values over time. The bottom plot depicts the motion segments
+discovered by our algorithm. The $y$ axis of the motion segments plot
+represents the current segment length in time steps of the algorithm.}
 \label{fig:motion_segments}
 \end{figure}
 
