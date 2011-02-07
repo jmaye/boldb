@@ -27,12 +27,13 @@ hyperparameters of the normal-Wishart to $\kappa_0=1,
 only considered IMU data at $10$ Hz.
 
 Fig.~\ref{fig:motion_segments} shows the extracted motion segments along with
-the corresponding IMU data. Our algorithm identified $113$ segments which are
+the corresponding IMU data. Our algorithm identified $165$ segments which are
 validated by visual inspection of the IMU data. Furthermore, the segmentation
 has been compared to a manual annotation of our image sequence and exhibited an
-accuracy of about $95\%$. As expected, the motion patterns that appeared where
-driving straight with no acceleration, driving straight with acceleration or
-deceleration, and turning left or right.
+accuracy of about $91\%$. The parameter $\lambda$ controls the false
+positives/negatives rates. As expected, the motion patterns that appeared
+where driving straight with no acceleration, driving straight with acceleration
+or deceleration, and turning left or right.
 
 \begin{figure}[t]
 \centering
@@ -55,21 +56,3 @@ dataset. The pyramid representations were generated on $L=3$ levels. The prior
 of the DCM for a new motion segment was learned from the same $N$ images. The
 probability for a new label was set to $p_{new}=0.5$ and the Chi-square
 threshold to $\xi=0.1$.
-
-Our algorithm discovered $10$ traffic situation models. Fig.~\ref{fig:place64}
-and \ref{fig:place103} depict two situations that appeared several times in our
-run.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig/place64.eps}
-\caption{First example of a traffic situation discovered by our algorithm.}
-\label{fig:place64}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig/place103.eps}
-\caption{Second example of a traffic situation discovered by our algorithm.}
-\label{fig:place103}
-\end{figure}
