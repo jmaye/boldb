@@ -21,7 +21,9 @@ p(l_t\mid r_t)\nonumber\\
 &=& p(\mathbf{c}^{r_t}\mid l_t,r_t)p(l_t\mid r_t),
 \end{eqnarray}
 
-where $\mathbf{c}^{r_t}$ represents data on the current segment $r_t$.
+where $\mathbf{c}^{r_t}$ represents data on the current segment $r_t$, i.e.,
+$\mathbf{c}^{r_{t}}=[\mathbf{c}_{t}]$ in case $r_{t}=0$ and
+$\mathbf{c}^{r_{t}}=[\mathbf{c}_{t-r_{t}},\dots,\mathbf{c}_{t}]$ otherwise.
 
 For the prior part in \eqref{eqn:labeling}, we use the posterior of the previous
 time step, that is
