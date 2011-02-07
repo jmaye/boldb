@@ -196,10 +196,10 @@ sampling space of the state is reduced to $r_t$ and the rest is marginalized out
 
 \subsection{Application to Motion Data Segmentation}
 In our particular case, data comes from an IMU and we consider accelerations in
-the three standard axes $x,y,z$, with $x$ pointing forward, $y$ on the left, and
-$z$ upward. We can safely assume that an IMU measurement $\mathbf{z}_t$ arises
-from a multivariate normal distribution with mean $\boldsymbol{\mu}_n$ and
-covariance matrix $\boldsymbol{\Sigma}_n$ for segment $s_n$. The parameter
+the $x,y$ axes and the $yaw$ rate, with $x$ pointing forward, $y$ on the left,
+and $z$ upward. We can safely assume that an IMU measurement $\mathbf{z}_t$
+arises from a multivariate normal distribution with mean $\boldsymbol{\mu}_n$
+and covariance matrix $\boldsymbol{\Sigma}_n$ for segment $s_n$. The parameter
 vector for segment $r_t$ is thus $\boldsymbol{\eta}^{r_{t}}=
 \{\boldsymbol{\mu}^{r_{t}},\boldsymbol{\Sigma}^{r_{t}}\}$. In order to solve
 the integral in (\ref{eqn:preddistr}) analytically, we model the parameter prior

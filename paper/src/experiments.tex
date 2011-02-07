@@ -8,30 +8,38 @@ crosswalks, or changes of speed limit. We have driven in a loop so as to come
 several times in the same situation and thus have an evaluation of the quality
 of our solution.
 
+In the rest of this Section, we first show an experiment of the whole algorithm
+on synthetic data. It is easier to have a ground truth and thus a quantitative
+analysis of the performance on simulated data. We then show the results on
+real-world data with a detailed analysis of all the components.
+
+\subsection{Simulation}
+BLABLA
+
 \subsection{Motion Segmentation}
-In this first experiment, we want to estimate the quality of our motion
-segmentation algorithm. After running the framework presented in
-Sections~\ref{sec:formulation}-\ref{sec:action}, we performed inference on the
+In this experiment, we want to estimate the quality of our motion segmentation
+algorithm from Section~\ref{sec:motion}. We performed inference on the
 final posterior distribution $p(r_t\mid \mathbf{z}_{1:t})$ to get the optimal
 sequence of segments length which represents our motion segments. We set the
 hazard rate to $\lambda=1/10$, the number of particles to $P=100$, and the prior
-hyperparameters of the Normal-Wishart to $\kappa_0=1,
-\boldsymbol{\rho}_0=\mathbf{0},\nu_0=3,\boldsymbol{\Lambda}_0=\mathbf{I}$. For
-motion segmentation, we only consider IMU data at $10$ Hz.
+hyperparameters of the normal-Wishart to $\kappa_0=1,
+\boldsymbol{\rho}_0=\mathbf{0},\nu_0=3,\boldsymbol{\Lambda}_0=\mathbf{I}$. We
+only considered IMU data at $10$ Hz.
 
 Fig.~\ref{fig:motion_segments} shows the extracted motion segments along with
 the corresponding IMU data. Our algorithm identified $113$ segments which are
-validated by visual inspection of the IMU data and corresponding images.
-Furthermore, the segmentation has been compared to a manual annotation of our
-image sequence and exhibited an accuracy of about $95\%$.
+validated by visual inspection of the IMU data. Furthermore, the segmentation
+has been compared to a manual annotation of our image sequence and exhibited an
+accuracy of about $95\%$. As expected, the motion patterns that appeared where
+driving straight with no acceleration, driving straight with acceleration or
+deceleration, and turning left or right.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{fig/cpDetect.eps}
+\includegraphics[width=\columnwidth]{fig/cpResult.eps}
 \caption{Optimal motion segmentation from IMU data. The three top plots are the
 IMU raw values over time. The bottom plot depicts the motion segments
-discovered by our algorithm. The $y$ axis of the motion segments plot
-represents the current segment length in time steps of the algorithm.}
+discovered by our algorithm.}
 \label{fig:motion_segments}
 \end{figure}
 
