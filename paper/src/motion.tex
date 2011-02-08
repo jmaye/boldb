@@ -33,7 +33,7 @@ distribution can be written as
 p(r_t\mid \mathbf{z}_{1:t})\propto p(r_t,\mathbf{z}_{1:t}).
 \end{equation}
 
-The joint distribution in \eqref{eqn:posterior} can be expressed as
+The joint distribution in \eqref{eqn:posterior} can be further expressed as
 
 \begin{eqnarray}
 \label{eqn:joint}
@@ -50,7 +50,7 @@ The right-hand side of \eqref{eqn:joint} consists of three terms: the
 $r_1,r_2,\dots,r_t$, the \emph{predictive distribution}
 $p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{1:t-1})$, and the posterior
 $p(r_{t-1},\mathbf{z}_{1:t-1})$ from the previous time step. We have exploited
-the Markov assumption for the simplifications in \eqref{eqn:joint}.
+Markov assumption for the simplifications in \eqref{eqn:joint}.
 %Fig.\ref{fig:model} illustrates \eqref{eqn:joint} with a graphical model.
 
 %\begin{figure}[t]
@@ -101,8 +101,8 @@ h(t) = \frac{\lambda\exp(-\lambda t)}{\exp(-\lambda t)} = \lambda.
 \end{equation}
 
 Thus, the hazard rate is constant and the process is ``memoryless''.
-Fig.~\ref{fig:transition} shows an example of transitions from $r_{t-1}$ to
-$r_{t+1}$.
+Fig.~\ref{fig:transition} shows an example of possible transitions
+from $r_{t-1}$ to $r_{t+1}$.
 
 \begin{figure}[t]
 \centering
@@ -133,25 +133,24 @@ inner sep=0pt,minimum size=12mm]
 \label{fig:transition}
 \end{figure}
 
-For the computation of the predictive distribution, we first note that it is
-only dependent on the data of the current segment $\mathbf{z}^{r_{t-1}}=
-[\mathbf{z}_{t-1}]$ in case $r_{t-1}=0$ and $\mathbf{z}^{r_{t-1}}=
-[\mathbf{z}_{t-1-r_{t-1}},\dots,\mathbf{z}_{t-1}]$ otherwise. Thus, it can
-be expressed as $p(\mathbf{z}_t\mid r_{t-1}, \mathbf{z}^{r_{t-1}})$. We finally
+For the computation of the predictive distribution, we can make it dependent
+only on the last data point $\mathbf{z}_{t-1}$ since we are doing a sequential
+update of the parameters. Thus, it can be expressed as $p(\mathbf{z}_t
+\mid r_{t-1}, \mathbf{z}_{t-1})$. We finally
 introduce the model parameters $\boldsymbol{\eta}^{r_{t-1}}$ that are learned
-on the current segment. We compute the predictive distribution by marginalizing
-out the model parameters $\boldsymbol{\eta}^{r_{t-1}}$, i.e.
+on the current segment and compute the predictive distribution by marginalizing
+them out, i.e.
 
 \begin{eqnarray}
 \label{eqn:preddistr}
-p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}^{r_{t-1}},\boldsymbol{\psi}^{r_{t-1}})
+p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{t-1},\boldsymbol{\psi}^{r_{t-1}})
 &=&\nonumber\\\int_{\boldsymbol{\eta}^{r_{t-1}}}
 p(\mathbf{z}_t\mid\boldsymbol{\eta}^{r_{t-1}})p(\boldsymbol{\eta}^{r_{t-1}}\mid
-r_{t-1},\mathbf{z}^{r_{t-1}},\boldsymbol{\psi}^{r_{t-1}})
+r_{t-1},\mathbf{z}_{t-1},\boldsymbol{\psi}^{r_{t-1}})
 d\boldsymbol{\eta}^{r_{t-1}}.
 \end{eqnarray}
 
-Here, we added the prior hyperparameters $\boldsymbol{\psi}^{r_{t-1}}$ for
+Here, we have added the prior hyperparameters $\boldsymbol{\psi}^{r_{t-1}}$ for
 completeness. The integral in \eqref{eqn:preddistr} can be solved analytically
 if we model the prior of the parameter vector $\boldsymbol{\eta}^{r_{t-1}}$ as a
 conjugate to the probability density function $p(\mathbf{z}_t\mid
@@ -176,14 +175,14 @@ significantly low, i.e., lower than a given threshold. However, as we want to
 accurately estimate our distribution and control the computational costs, we use
 a \emph{particle filter}. The state-space of $r_t$ being discrete and the number
 of successor states being small, we can evaluate all the possible descendants of
-$r_t$. Indeed, if $r_t$ has $k$ possible values, $r_{t+1}$ will have $k+1$
+$r_t$. Indeed, if $r_t$ takes $k$ possible values, $r_{t+1}$ will take $k+1$
 possible values. At each time step $t$, we approximate the posterior
 distribution with a set $\{r_t^{(i)},\boldsymbol{\psi}^{r_{t-1},(i)}\}_{i=1}^M$ of
 $M$ particles weighted by $\{w_t^{(i)}\}_{i=1}^M$ with
 
 \begin{equation}
 \label{eqn:weight}
-w_t^{(i)} \propto p(\mathbf{z}_t\mid r_{t-1}^{(i)},\mathbf{z}^{r_{t-1},(i)},
+w_t^{(i)} \propto p(\mathbf{z}_t\mid r_{t-1}^{(i)},\mathbf{z}_{t-1},
 \boldsymbol{\psi}^{r_{t-1},(i)}).
 \end{equation}
 

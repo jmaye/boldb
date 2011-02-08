@@ -14,8 +14,10 @@ label at time $t$, $\mathbf{a}_t$ the predicted action at time $t$,
 $\mathbf{z}_{1:t}$ the IMU measurements up to time $t$, and $\mathbf{c}_{1:t}$
 the camera measurements up to time $t$.
 
-Exploiting conditional independences in \eqref{eqn:jointfiletering} provides the
-decomposition
+Assuming $r_t$ is conditionally independent of $\mathbf{c}_{1:t}$ given
+$\mathbf{z}_{1:t}$, $l_t$ of $\mathbf{z}_{1:t}$ given $\mathbf{c}_{1:t}$, and
+$\mathbf{a}_t$ of $\mathbf{c}_{1:t}$ given $\mathbf{z}_{1:t}$, we can decompose
+\eqref{eqn:jointfiletering} into
 
 \begin{equation}
 \label{eqn:jointdecomposition}

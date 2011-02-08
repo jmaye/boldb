@@ -7,7 +7,7 @@ Section~\ref{sec:motion}.
 
 \subsection{Traffic Situation Model}
 As shown above, we denote the label of a segment $r_t$ as $l_t$. This label can
-take values in $[1,2,\dots,N]$ corresponding to $N$ parametric models $M_1,M_2,
+take values in $\{1,2,\dots,N\}$ corresponding to $N$ parametric models $M_1,M_2,
 \dots,M_N$. Each of the $M_i$ is a generative model $p(\mathbf{c}_t\mid
 \boldsymbol{\eta}_i)$ for a particular traffic situation with parameter vector
 $\boldsymbol{\eta}_i$. At time $t$, we estimate the distribution over the known
@@ -16,24 +16,24 @@ law as
 
 \begin{eqnarray}
 \label{eqn:labeling}
-p(l_t\mid r_t,\mathbf{c}_{1:t})&\propto&p(\mathbf{c}_{1:t}\mid l_t,r_t)
-p(l_t\mid r_t)\nonumber\\
-&=& p(\mathbf{c}^{r_t}\mid l_t,r_t)p(l_t\mid r_t),
+p(l_t\mid r_t,\mathbf{c}_{1:t})&\propto&p(\mathbf{c}_t\mid l_t,r_t,
+\mathbf{c}_{1:t-1})p(l_t\mid r_t,\mathbf{c}_{1:t-1})\nonumber\\
+&=& p(\mathbf{c}_t\mid l_t,r_t,\mathbf{c}_{t-1})p(l_t\mid
+r_t,\mathbf{c}_{1:t-1}).
 \end{eqnarray}
-
-where $\mathbf{c}^{r_t}$ represents data on the current segment $r_t$, i.e.,
-$\mathbf{c}^{r_{t}}=[\mathbf{c}_{t}]$ in case $r_{t}=0$ and
-$\mathbf{c}^{r_{t}}=[\mathbf{c}_{t-r_{t}},\dots,\mathbf{c}_{t}]$ otherwise.
 
 For the prior part in \eqref{eqn:labeling}, we use the posterior of the previous
 time step, that is
-$p(l_t\mid r_t)=p(l_{t-1}\mid r_{t-1},\mathbf{c}^{r_{t-1}})$. If we are in a new
-segment with $r_t=0$, we set the prior to a uniform distribution over the known
-models, i.e., $p(l_t=1:N\mid r_t)=\frac{1}{N}$. The likelihood part in
+$p(l_t\mid r_t,\mathbf{c}_{1:t-1})=p(l_{t-1}\mid r_{t-1},\mathbf{c}_{1:t-1})$.
+If we are in a new segment with $r_t=0$, we set the prior to a uniform
+distribution over the known models, i.e., $p(l_t=1:N\mid r_t,\mathbf{c}_{1:t-1})=
+\frac{1}{N}$. The likelihood part in
 \eqref{eqn:labeling} is computed with the model probability density function
 $p(\mathbf{c}_t\mid \boldsymbol{\eta}_i)$ in the same fashion as in
 \eqref{eqn:preddistr}, i.e., using a conjugate prior with hyperparameters
-$\boldsymbol{\psi}_i$ as will be detailed below.
+$\boldsymbol{\psi}_i$ as will be detailed below. Furthermore, we have only kept
+the dependency on the last data point $\mathbf{c}_{t-1}$ since we update the
+parameters iteratively.
 
 As we want to be able to discover new traffic situations on-line, we have to
 state if the current data $\mathbf{c}_t$ is unlikely to come from any of the
@@ -43,35 +43,35 @@ with a model learned over segment $r_t$. The test statistic is
 
 \begin{equation}
 \label{eqn:statistic}
-D = -2\ln\frac{p(\mathbf{c}_t\mid \boldsymbol{\psi}_i)}{p(\mathbf{c}_t\mid
-\boldsymbol{\psi}^{r_t})},
+D = -2\ln\frac{p(\mathbf{c}_t\mid l_t=i,\boldsymbol{\psi}_i)}{p(\mathbf{c}_t\mid
+l_t,r_t,\mathbf{c}_{t-1},\boldsymbol{\psi}^{r_{t-1}})},
 \end{equation}
 
-where $\boldsymbol{\psi}^{r_t}$ is the maximum likelihood solution for
-$\boldsymbol{\psi}$ over the current segment $r_t$.
+where $\boldsymbol{\psi}^{r_{t-1}}$ are the hyperparameters learned over the
+current segment $r_{t-1}$.
 
 Based on the value of $D$, we have to decide whether to accept or reject the
 null hypothesis, i.e., data in segment $r_t$ arises from model $M_i$. It is
-shown that when the sample size grows towards infinity, $D$ converges towards a
-Chi-square distribution with $K-1$ degrees of freedom, where $K$ is the
-dimension of $\boldsymbol{\psi}$. In our case, the sample size represents the
-number of data used to compute the maximum likelihood solution. As will be
-shown below, it will be sufficient to approximate $D$ with a Chi-square
-distribution. We will thus compare $D$ to the Chi-square value corresponding to
-the desired statistical significance $\xi$ of the null hypothesis. In practice,
-this is done by computing the value of the cumulative distribution
-function of the Chi-square distribution for $D$ and reject the model
-$M_i$ if it is below $\xi$.
+shown that when the sample size for computing $\boldsymbol{\psi}$ grows towards
+infinity, $D$ converges towards a Chi-square distribution with $K-1$ degrees of
+freedom, where $K$ is the dimension of $\boldsymbol{\psi}$. In our case, as will
+be shown below, we have thousands of features per image and segments typically
+contain hundreds of images. This is sufficient to approximate $D$ with a
+Chi-square distribution. We will thus compare $D$ to the Chi-square value
+corresponding to the desired statistical significance $\xi$ of the null
+hypothesis. In practice, this is done by computing the value of the cumulative
+distribution function of the Chi-square distribution for $D$ and reject the
+model $M_i$ if it is below $\xi$.
 
 In case all models are rejected, we create a new instance $M_{N+1}$
-with hyperparameter vector $\boldsymbol{\psi}^{r_t}$, set $p(l_t=N+1\mid r_t,
-\mathbf{c}^{r_t})=p_{new}$, and $p(l_t=1:N\mid r_t,\mathbf{c}^{r_t})=
-(1-p_{new})/N$. We update the hyperparameters $\boldsymbol{\psi}_i$ of model
-$M_i$, such that $i=\argmax_{j=1:N}p(l_t=j\mid
-r_t,\mathbf{c}^{r_t})$, with $\mathbf{c}_t$.
+with hyperparameter vector $\boldsymbol{\psi}^{r_{t-1}}$, set $p(l_t=N+1\mid
+r_t,\mathbf{c}_{1:t})=p_{new}$, and $p(l_t=1:N\mid r_t,\mathbf{c}_{1:t})=
+(1-p_{new})/N$. We finally update the hyperparameters $\boldsymbol{\psi}_i$ of
+model $M_i$, such that $i=\argmax_{j=1:N}p(l_t=j\mid
+r_t,\mathbf{c}_{1:t})$, with $\mathbf{c}_t$.
 
 From an implementation point of view, we attach the distribution
-\eqref{eqn:labeling}, the hyperparameters $\boldsymbol{\psi}^{r_t}$, and the
+\eqref{eqn:labeling}, the hyperparameters $\boldsymbol{\psi}^{r_{t-1}}$, and the
 incremental set of known models $M_i$ to each particle. Thus, our system is able
 to learn new traffic situations on-line and refine its knowledge over
 previously visited scenes.
@@ -86,14 +86,16 @@ and text documents by images.
 We use Scale-Invariant Feature Transform (SIFT)~\cite{lowe04distinctive}
 descriptors computed at Difference of Gaussians (DoG) keypoints. SIFT
 descriptors have been shown to be highly discriminative for object recognition.
-Although some authors claim that they obtain better results with dense grid
-representations~\cite{feifei05bayesian}, DoG interest points are more suitable
-for our purpose. Indeed, we are not interested in capturing uniform regions such
-as sky, but rather focused on objects. $N$ images are randomly selected from the
-entire dataset to build a \emph{codebook} or dictionary of features using
-K-means clustering. Each feature of an image is then assigned to the nearest
-\emph{codeword} of the dictionary and we can therefore build a convenient
-histogram representation.
+Although some authors claim that they obtain significantly better results with
+dense grid representations~\cite{feifei05bayesian}, DoG interest points are more
+suitable for our purpose. Indeed, we are not interested in capturing uniform
+regions such as sky, but rather focused on objects. $N$ images are randomly
+selected from the entire dataset to build a \emph{codebook} or dictionary of
+features using K-means clustering. Each feature of an image is then assigned to
+the nearest \emph{codeword} of the dictionary and we can therefore build a
+convenient histogram representation. In order to retrieve spatial information
+about features, we could also adapt the spatial pyramid method
+of~\cite{lazebnik06beyond}.
 
 The link between bag-of-\emph{features} models in computer vision and
 bag-of-words models in text document modeling is intuitive. We can therefore use
@@ -106,40 +108,40 @@ document, it is more likely to appear again. In terms of images, this makes
 sense since the same feature is likely to appear several times in the same
 image. Furthermore, the DCM combines a multinomial model and a Dirichlet prior,
 and provides an analytical solution to the marginalization of the multinomial
-parameters. The multinomial distribution $p(\mathbf{c}_t\mid
-\boldsymbol{\theta})$ has parameters $\boldsymbol{\theta}=[\theta_1,\theta_2,
-\dots,\theta_K]$, corresponding to $\boldsymbol{\eta}$ above. The Dirichlet
-prior $p(\boldsymbol{\theta}\mid\boldsymbol{\alpha})$ has hyperparameters
-$\boldsymbol{\alpha}=[\alpha_1,\alpha_2,\dots,\alpha_K]$, corresponding to
-$\boldsymbol{\psi}$ above. The likelihood part of \eqref{eqn:labeling} can now
-be formulated as
+parameters~\cite{minka03estimating}. The multinomial distribution
+$p(\mathbf{c}_t\mid\boldsymbol{\theta})$ has parameters $\boldsymbol{\theta}=
+[\theta_1,\theta_2,\dots,\theta_K]$, corresponding to $\boldsymbol{\eta}$ above.
+The Dirichlet prior $p(\boldsymbol{\theta}\mid\boldsymbol{\alpha})$ has
+hyperparameters $\boldsymbol{\alpha}=[\alpha_1,\alpha_2,\dots,\alpha_K]$,
+corresponding to $\boldsymbol{\psi}$ above. The likelihood part of
+\eqref{eqn:labeling} can now be formulated as
 
 \begin{eqnarray}
 \label{eqn:polya}
-p(\mathbf{c}^{r_t}\mid l_t,r_t,\boldsymbol{\alpha}^{r_t})&=&
-\int_{\boldsymbol{\theta}}
-p(\mathbf{c}^{r_t}\mid\boldsymbol{\theta})p(\boldsymbol{\theta}\mid
-l_t,r_t,\boldsymbol{\alpha}^{r_t})d\boldsymbol{\theta}\\\nonumber
-&=&\frac{n!}{\prod_{k=1}^K n_k!}\frac{\Gamma(\alpha^{r_t})}
-{\Gamma(n+\alpha^{r_t})}\prod_{k=1}^K\frac{\Gamma(n_k+\alpha^{r_t}_k)}
-{\Gamma(\alpha^{r_t}_k)},
+p(\mathbf{c}_t\mid l_t,r_t,\mathbf{c}_{t-1},\boldsymbol{\alpha}^{r_{t-1}})
+&=&\\\nonumber
+\int_{\boldsymbol{\theta}^{r_{t-1}}}
+p(\mathbf{c}_{t}\mid\boldsymbol{\theta}^{r_{t-1}})
+p(\boldsymbol{\theta}^{r_{t-1}}\mid
+l_t,r_t,\mathbf{c}_{t-1},\boldsymbol{\alpha}^{r_{t-1}})
+d\boldsymbol{\theta}^{r_{t-1}}
+&=&\\\nonumber\frac{n!}{\prod_{k=1}^K n_k!}\frac{\Gamma(\alpha^{r_{t-1}})}
+{\Gamma(n+\alpha^{r_{t-1}})}\prod_{k=1}^K\frac{\Gamma(n_k+\alpha^{r_{t-1}}_k)}
+{\Gamma(\alpha^{r_{t-1}}_k)},
 \end{eqnarray}
 
-where $\Gamma(.)$ is the Gamma function, $n_k=\sum_{j=t-r_t}^t
-\mathbf{c}_j\,(k)$, $n=\sum_{k=1}^K n_k$,
-$\alpha^{r_t}=\sum_{k=1}^K\alpha^{r_t}_k$, and we added the hyperparameter
-$\boldsymbol{\alpha}^{r_t}$ in the conditional.
+where $\Gamma(.)$ is the Gamma function, $n_k=\mathbf{c}_t\,(k)$,
+$n=\sum_{k=1}^K n_k$,
+$\alpha^{r_{t-1}}=\sum_{k=1}^K\alpha^{r_{t-1}}_k$, and we have added the
+hyperparameters $\boldsymbol{\alpha}^{r_{t-1}}$ in the conditional.
 
-As there exists no analytical solution to the maximum likelihood parameters
-estimation of a DCM, an iterative gradient descent
-optimization~\cite{minka03estimating} is used and leads to the update rule
+For the iterative update of the hyperparameters $\boldsymbol{\alpha}^{r_t}$, we
+can use the simple rule
 
 \begin{equation}
 \label{eqn:alpha_update}
-\alpha_k^{r_t} = \alpha^{r_{t-1}}_k\frac{\sum_{j=t-r_t}^t\Psi(n_{jk}+
-\alpha^{r_{t-1}}_k)-\Psi(\alpha^{r_{t-1}}_k)}{\sum_{j=t-r_t}^t\Psi(n_j+
-\alpha^{r_{t-1}})-\Psi(\alpha^{r_{t-1}})},
+\boldsymbol{\alpha}^{r_t} = \boldsymbol{\alpha}^{r_{t-1}} + \mathbf{c}_{t}.
 \end{equation}
 
-where $\Psi(.)$ is the digamma function, $n_{jk}=\mathbf{c}_j\,(k)$, and
-$n_j=\sum_{k=1}^K n_{jk}$.
+In case we start a new segment and $r_t=0$, the hyperparameters are fixed to
+some prior values $\boldsymbol{\psi}_0=\{\boldsymbol{\alpha}_0\}$.
