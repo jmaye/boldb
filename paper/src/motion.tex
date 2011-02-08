@@ -141,14 +141,17 @@ introduce the model parameters $\boldsymbol{\eta}^{r_{t-1}}$ that are learned
 on the current segment and compute the predictive distribution by marginalizing
 them out, i.e.
 
-\begin{eqnarray}
+\begin{equation}
 \label{eqn:preddistr}
 p(\mathbf{z}_t\mid r_{t-1},\mathbf{z}_{t-1},\boldsymbol{\psi}^{r_{t-1}})
-&=&\nonumber\\\int_{\boldsymbol{\eta}^{r_{t-1}}}
+= \phantom{aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa}\nonumber
+\end{equation}
+\begin{equation}
+ \phantom{aaaaaaaa}\int_{\boldsymbol{\eta}^{r_{t-1}}}
 p(\mathbf{z}_t\mid\boldsymbol{\eta}^{r_{t-1}})p(\boldsymbol{\eta}^{r_{t-1}}\mid
 r_{t-1},\mathbf{z}_{t-1},\boldsymbol{\psi}^{r_{t-1}})
 d\boldsymbol{\eta}^{r_{t-1}}.
-\end{eqnarray}
+\end{equation}
 
 Here, we have added the prior hyperparameters $\boldsymbol{\psi}^{r_{t-1}}$ for
 completeness. The integral in \eqref{eqn:preddistr} can be solved analytically
