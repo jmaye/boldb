@@ -36,14 +36,14 @@ image adds up to the time.
 \caption{Simulation results of the entire algorithm. From top to bottom, the
 plots display the simulated IMU data $\mathbf{z}_t$, the inferred segment
 lengths $r_t$, the inferred labels $l_t$ (blue circle) and ground truth
-(red square), the MAP for $\mathbf{a}_t$.}
+(red square), and the MAP for $\mathbf{a}_t$.}
 \label{fig:simulation}
 \end{figure}
 
 \subsection{Motion Segmentation}
 In this experiment, we want to estimate the quality of our motion segmentation
 algorithm from Section~\ref{sec:motion}. We performed inference on the
-final posterior distribution $p(r_t\mid \mathbf{z}_{1:t})$ to get the optimal
+final posterior distribution \eqref{eqn:joint} to get the optimal
 sequence of segment lengths which represents our motion segments. We set the
 hazard rate to $\lambda=1/10$, the number of particles to $P=100$, and the prior
 hyperparameters of the normal-Wishart to $\kappa_0=1,
@@ -71,14 +71,18 @@ discovered by our algorithm.}
 \end{figure}
 
 \subsection{Traffic Situation Labeling and Recognition}
-In this second experiment, we are interested in evaluating the part of our
-algorithm presented in Sec.~\ref{sec:labeling}. We want to see how many traffic
-situations models were discovered and what they represent. Moreover, we want
-to see if we can re-associate place models in other runs at the same place.
+In this experiment, we are interested in evaluating the part of our algorithm
+presented in Section~\ref{sec:labeling} and perform inference on
+\eqref{eqn:labeling}. In a first phase, we collected a subset
+of images from traffic lights, yield signs, pedestrian crossings, and regular
+straight roads. Models $M_i$ were learned on these images and frozen during the
+evaluation. In a second phase, we started the algorithm with no prior models.
+The dictionary was created from a set of $N=400$ randomly picked images and the
+SIFT features quantized into $K=256$ visual words.
 
-SIFT descriptors have been computed on a grid of $l=8$x$8$. We have created a
-dictionary of $K=1024$ SIFT features from $N=400$ images randomly picked in our
-dataset. The pyramid representations were generated on $L=3$ levels. The prior
-of the DCM for a new motion segment was learned from the same $N$ images. The
-probability for a new label was set to $p_{new}=0.5$ and the Chi-square
-threshold to $\xi=0.1$.
+ANOTHER PARAGRAPH SHOWING AND EXPLAINING THE RESULTS. IF SPACE, SHOW A GRAPH.
+
+\subsection{Action Prediction}
+FIRST PARAGRAPH DESCRIBING THE EXPERIMENTAL CONDITIONS.
+
+SECOND PARAGRAPH OUTPUTTING AND COMMENTING THE RESULTS.
