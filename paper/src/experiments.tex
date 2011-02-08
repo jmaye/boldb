@@ -17,12 +17,18 @@ with a detailed analysis of all the components.
 For visualization purposes, we have simulated IMU data with an univariate normal
 distribution and have introduced change-points every $50$ data points. We have
 randomly generated 3 different $\boldsymbol{\alpha}_i$ with $K=256$ coding for
-the traffic situations.
+the traffic situations. Although the algorithm starts with no prior knowledge,
+we could also start with previously learned models $M_i$ and $A_i$.
 
 Fig.~\ref{fig:simulation} depicts the output of the simulation and demonstrates
-the pertinence of our method. The code runs in MATLAB with no attempt for
-optimization and has a processing time of about $0.3$ seconds per time step. In
-a realistic scenario, histogram building from image adds up to the time.
+the pertinence of our method. After a change-point, the algorithm needs a time
+of adaptation to collect enough data points in order to converge to the correct
+prediction. In Fig.~\ref{fig:simulation}, we display the MAP solution for
+\eqref{eqn:action} on the bottom plot and thus the prediction reflects the
+Gaussian component with the biggest number of data points. The code runs in
+MATLAB with no attempt for optimization and has a processing time of about
+$0.3$ seconds per time step. In a realistic scenario, histogram building from
+image adds up to the time.
 
 \begin{figure}[t]
 \centering
