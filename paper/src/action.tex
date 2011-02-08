@@ -17,9 +17,10 @@ p(\mathbf{a_t} \mid r_t, l_t,\mathbf{z}_{1:t},\boldsymbol{\psi}^{\mathbf{x}_t})=
 \mathbf{z}_{1:t},\boldsymbol{\psi}^{\mathbf{x}_t}),
 \end{equation}
 
-where $\mathbf{x}_t$ is a $K$-dimensional vector with a $1$ at the position $k$
-if the $k$-th Gaussian is selected, $p(\mathbf{x}_t)$ is the prior for selecting
-a particular Gaussian, and $p(\mathbf{a}_t\mid\mathbf{x}_t,r_t,l_t,
+where $\mathbf{x}_t$ is a $K$-dimensional vector with a single one at the
+position $k$ encoding for the $k$-th Gaussian and zeros elsewhere,
+$p(\mathbf{x}_t)$ is the prior for selecting a particular Gaussian component
+$\mathbf{x}_t$, and $p(\mathbf{a}_t\mid\mathbf{x}_t,r_t,l_t,
 \mathbf{z}_{1:t},\boldsymbol{\psi}^{\mathbf{x}_t})$ is a Gaussian distribution
 with hyperparameters $\boldsymbol{\psi}^{\mathbf{x}_t}$. In a similar fashion as
 in Section~\ref{sec:motion}, we have marginalized out the parameters of the
@@ -34,10 +35,13 @@ p(\mathbf{x}_t(i)=1)\propto n_t^i,
 where $n_t^i$ is the sum of the points assigned to Gaussian component $i$.
 
 Upon reception of a new data point $\mathbf{z}_t$, we perform the likelihood
-ratio test on the Gaussian components. If all the components are rejected, a new
-Gaussian is created with hyperparameters $\boldsymbol{\psi}_0$. We update the
-hyperparameters of the most likely Gaussian component with the rule from
-\eqref{eqn:hyperupdate} and increment the corresponding $n_t^i$.
+ratio test on all the Gaussian components $\mathbf{x}_{t-1}$ of the model $l_t$.
+Compared to the method proposed in Section~\ref{sec:labeling}, the Chi-square
+assumption does not hold and we directly threshold the ratio with $\varepsilon$.
+If all the components are rejected, a new Gaussian is created with
+hyperparameters $\boldsymbol{\psi}_0$. We update the hyperparameters of the most
+likely Gaussian component with the rule from \eqref{eqn:hyperupdate} and
+increment the corresponding $n_t^i$.
 
 From an implementation point of view, the distribution~\eqref{eqn:action} and
 the learned GMM $A_i$ are attached to the particle filter of
