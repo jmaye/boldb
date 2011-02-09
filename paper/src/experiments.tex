@@ -74,22 +74,26 @@ discovered by our algorithm.}
 In this experiment, we are interested in evaluating the part of our algorithm
 presented in Section~\ref{sec:labeling} and perform inference on
 \eqref{eqn:labeling} to obtain the most likely label for a scene. In a first
-phase, we collected a subset of images from traffic lights, yield signs,
-pedestrian crossings, and regular straight roads. Models $M_i$ were learned on
-these images using \eqref{eqn:alpha_update} and frozen during the evaluation.
-In a second phase, we started the algorithm with no prior models. The dictionary
-was created from a set of $N=400$ randomly picked images and the SIFT features
-quantized into $K=256$ visual words. In the supervised case, we have manually
-annotated the image sequence and the resulting labeling can be easily compared
-to the ground truth. In the unsupervised case, the quality of the labeling is
-hard to evaluate.
+phase, we collected a subset of images from traffic lights, yield signs, and
+pedestrian crossings. Models $M_i$ were learned on these images using
+\eqref{eqn:alpha_update} and frozen during the evaluation. In a second phase,
+we started the algorithm with no prior models. The dictionary was created from a
+set of $N=400$ randomly picked images and the SIFT features quantized into
+$K=256$ visual words. The prior hyperparameters of the Dirichlet distribution
+were set to $\boldsymbol{\alpha}_0=\mathbf{1}$. In the supervised
+case, we have manually annotated the image sequence and the resulting labeling
+can be easily compared to the ground truth. In the unsupervised case, the
+quality of the labeling is more challenging to evaluate.
 
-ANOTHER PARAGRAPH SHOWING AND EXPLAINING THE RESULTS. IF SPACE, SHOW A GRAPH.
+In the supervised learning case, we obtained an accuracy of $93\%$ for traffic
+light scenes, $99\%$ for yield scenes, and $91\%$ for pedestrian crossings
+scenes. We except these results to drop slightly in a completely unseen
+environment.
 
 \subsection{Action Prediction}
 In this final experiment, we focus on the strategy presented in
 Section~\ref{sec:action}. The quantitative evaluation is relatively simple since
 we can compare our prediction to the incoming IMU data. We set the threshold for
-creating a new Gaussian to $\epsilon=0.1$.
+creating a new Gaussian to $\epsilon=5$.
 
 SECOND PARAGRAPH OUTPUTTING AND COMMENTING THE RESULTS.
