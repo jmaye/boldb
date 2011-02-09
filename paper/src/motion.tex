@@ -106,18 +106,18 @@ from $r_{t-1}$ to $r_{t+1}$.
 
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}
+\begin{tikzpicture}[scale=0.7]
 \tikzstyle{every node} = [rectangle,draw=blue!50,fill=blue!20,thick,
-inner sep=0pt,minimum size=12mm]
-\node (a) at (-2, 2) {$r_{t-1}=0$};
-\node (b) at (-2, 0) {$r_{t-1}=1$};
-\node (c) at (-2, -2) {$r_{t-1}=2$};
+inner sep=0pt,minimum size=6mm]
+\node (a) at (-4, 2) {$r_{t-1}=0$};
+\node (b) at (-4, 0) {$r_{t-1}=1$};
+\node (c) at (-4, -2) {$r_{t-1}=2$};
 \node (d) at (0, 2) {$r_t=0$};
 \node (e) at (0, 0) {$r_t=1$};
 \node (f) at (0, -2) {$r_t=2$};
-\node (g) at (2, 2) {$r_{t+1}=0$};
-\node (h) at (2, 0) {$r_{t+1}=1$};
-\node (i) at (2, -2) {$r_{t+1}=2$};
+\node (g) at (4, 2) {$r_{t+1}=0$};
+\node (h) at (4, 0) {$r_{t+1}=1$};
+\node (i) at (4, -2) {$r_{t+1}=2$};
 \draw [->,thick] (a) -- (d);
 \draw [->,thick] (a) -- (e);
 \draw [->,thick] (b) -- (d);
@@ -159,8 +159,8 @@ if we model the prior of the parameter vector $\boldsymbol{\eta}^{r_{t-1}}$ as a
 conjugate to the probability density function $p(\mathbf{z}_t\mid
 \boldsymbol{\eta}^{r_{t-1}})$. Otherwise, this leads to expensive numerical
 computations. When the terms inside the integral are conjugate models, the
-marginal distribution is usually a function of the sufficient statistics which
-can be updated iteratively as data arrives.
+marginal distribution is usually a function of the hyperparameters
+$\boldsymbol{\psi}^{r_{t-1}}$ which can be updated iteratively as data arrives.
 
 \subsection{Complexity and Approximate Inference}
 In order to exactly infer the positions of all change-points until time $t$, we
@@ -229,8 +229,8 @@ In case we start a new segment and $r_t=0$, the hyperparameters are fixed to
 some prior values $\boldsymbol{\psi}_0=\{\kappa_0,\boldsymbol{\rho}_0,\nu_0,
 \boldsymbol{\Lambda}_0\}$.
 
-From (\ref{eqn:hyperupdate}), we can express the parameters of the
-multivariate normal distribution as
+From (\ref{eqn:hyperupdate}), we can express the parameters of the resulting
+multivariate normal distribution in \eqref{eqn:preddistr} as
 
 \begin{eqnarray}
 \label{eqn:ssmvn}
