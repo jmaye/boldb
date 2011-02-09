@@ -1,30 +1,77 @@
-One research area that has turned more and more into the focus of interest
-during the last years is the development of driver intelligent assistant
-systems. In particular, a very active topic is the design of human-friendly
-vehicle control systems, able to meet the driver specific behaviors. In this
-paper we address the problem of learning driver behaviors by using multiple
-sensing modalities, namely camera images and inertial information (IMU). Most
-existing techniques build a behavior model from heuristic rules or from
-supervised training data. Our approach proposes a novel Bayesian on-line and
-unsupervised way of learning driver's behavior in different traffic conditions.
-Specifically we learn the relationship between vehicle motion and image streams.
+The development of intelligent driver assistant systems has become a
+very active research field in the last years. The large spectrum of
+potential applications for such systems ranges from automatic warning
+systems that detect obstacles and dynamic objects over automated
+parking systems to fully autonomous cars that are able to navigate in
+busy city environments. One aspect that is of major importance in all
+these systems is the perception part of the vehicle, i.e. the data
+acquisition and semantic interpretation of the environment. The major
+challenges here include the required accuracy of the detection system,
+the time constraints given by the speed of the vehicle and its implied
+temporal restrictions on the decision process, as well as the large
+variability in which potential objects and the environemnt itself may
+appear. Especially this latter point poses a significant challenge on
+the perception task, because standard learning techniques that most
+often rely on supervised offline classification algorithms tend to
+give poor results when the test environment largely differs from the
+acquired training data. Furthermore, such systems are not capable of
+adapting to new, unseen situations, which reduces their applicability
+for long-term use cases. 
 
-Motion data is segmented by using a \textit{change-point} detection method, a
-technique that solves the problem of detecting abrupt changes to the parameters
-of a statistical model. We use a Bayesian approach to compute the probability of
-a change-point occurring at each time step. We have formulated a fast
-approximation of this method by using a Rao-Blackwellized particle filter.
-The motion segments are grouped together to represent traffic situations by
-exploiting similarity in the associated image streams. This is computed on-line
-and in an unsupervised manner. The streams are represented as collection of
-bag-of-words modeled after a Dirichlet Compound Multinomial model. This process
-provides tools to predict the driving actions conditioned on the current traffic
-situation.
+In this paper, we present a self-supervised on-line learning algorithm
+that recognizes driving behaviors and predicts appropriate actions
+accordingly. A driving behavior in our context is defined as a short
+sequence of actuation commands to the vehicle that typically occur in
+certain traffic situations. An example is the braking maneuvre in
+front of a red traffic light. In our system, the driving behaviors are
+observed using an inertial measurement unit (IMU) and a camera while a
+human is driving the vehicle. Using our approach, the system is able
+to detect and classify new traffic scenarios and predict appropriate
+actions based on the driving behaviors learned in earlier stages of
+the data acquisition process. The principle idea is to first segment
+the data stream from the IMU into consistent sequences using
+\emph{change-point detection}, and then relate these motion sequences
+to visual features observed in the camera data during the
+corresponding motion. To find the change points in the motion data, we
+use an efficient Bayesian approach based on a Rao-Blackwellized
+particle filter. The visual features are represented in a bag-of-words
+approach using a Dirichlet Compound Multinomial (DCM) model. The
+detected motion segments are grouped on-line and without human
+intervention, according to their similarities in their corresponding
+visual features. This enables the system to predict new motion
+commands according to the traffic situation it detects from new camera
+data. Thus, it predicts a braking maneuvre when it encounters enough
+evidence for a red light in the camera data.
 
-The the paper is structured as follows. Section~\ref{sec:related}
-summarizes the previous work related to ours. Section~\ref{sec:motion}
-describes our motion segmentation method. Section~\ref{sec:labeling}
-shows how we model a traffic situation. Section~\ref{sec:action} demonstrates
-our action model. Section~\ref{sec:exp} presents experimental results.
-Section~\ref{sec:conc} outlines our conclusions and provides some insights for
+
+%One research area that has turned more and more into the focus of interest
+%during the last years is the development of driver intelligent assistant
+%systems. In particular, a very active topic is the design of human-friendly
+%vehicle control systems, able to meet the driver specific behaviors. In this
+%paper we address the problem of learning driver behaviors by using multiple
+%sensing modalities, namely camera images and inertial information (IMU). Most
+%existing techniques build a behavior model from heuristic rules or from
+%supervised training data. Our approach proposes a novel Bayesian on-line and
+%unsupervised way of learning driver's behavior in different traffic conditions.
+%Specifically we learn the relationship between vehicle motion and image streams.
+
+%Motion data is segmented by using a \textit{change-point} detection
+%method, a technique that solves the problem of detecting abrupt
+%changes to the parameters of a statistical model. We use a Bayesian
+%approach to compute the probability of a change-point occurring at
+%each time step. We have formulated a fast approximation of this method
+%by using a Rao-Blackwellized particle filter.  The motion segments are
+%grouped together to represent traffic situations by exploiting
+%similarity in the associated image streams. This is computed on-line
+%and in an unsupervised manner. The streams are represented as
+%collection of bag-of-words modeled after a Dirichlet Compound
+%Multinomial model. This process provides tools to predict the driving
+%actions conditioned on the current traffic situation.
+
+The paper is structured as follows. Sec.~\ref{sec:related}
+summarizes the previous work related to ours. Sec.~\ref{sec:motion}
+describes our motion segmentation method. Sec.~\ref{sec:labeling}
+shows how we model a traffic situation. Sec.~\ref{sec:action} demonstrates
+our action model. Sec.~\ref{sec:exp} presents experimental results.
+Sec.~\ref{sec:conc} outlines our conclusions and provides some insights for
 future work.
