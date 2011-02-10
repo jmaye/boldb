@@ -82,25 +82,20 @@ regions such as sky, but rather focused on objects. $N$ images are randomly
 selected from the entire dataset to build a \emph{codebook} or dictionary of
 features using K-means clustering. Each feature of an image is then assigned to
 the nearest \emph{codeword} of the dictionary and we can therefore build a
-convenient histogram representation. In order to retrieve spatial information
-about features, we could also adapt the spatial pyramid method
-of~\cite{lazebnik06beyond}.
+convenient histogram representation.
 
 The link between bag-of-\emph{features} models in computer vision and
 bag-of-words models in text document modeling is intuitive. We can therefore use
 the generative model of~\cite{madsen05modeling} to represent an image in a
 probabilistic manner as was already proposed in~\cite{ranganathan09bayesian}.
-The idea of~\cite{madsen05modeling} is to represent a text document with a
-Dirichlet Compound Multinomial (DCM) model, also known as multivariate Polya
-distribution. It models the fact that when a particular word occurs in a
-document, it is more likely to appear again. In terms of images, this makes
-sense since the same feature is likely to appear several times in the same
-image. Furthermore, the DCM combines a multinomial model and a Dirichlet prior,
-and provides an analytical solution to the marginalization of the multinomial
-parameters~\cite{minka03estimating}. The multinomial distribution
-$p(\mathbf{c}_t\mid\boldsymbol{\theta})$ has parameters $\boldsymbol{\theta}=
-[\theta_1,\theta_2,\dots,\theta_K]$, corresponding to $\boldsymbol{\eta}$ above.
-The Dirichlet prior $p(\boldsymbol{\theta}\mid\boldsymbol{\alpha})$ has
+Image histograms are modeled with a Dirichlet Compound Multinomial (DCM), also
+known as multivariate Polya distribution. The DCM combines a multinomial model
+and a Dirichlet prior, and provides an analytical solution to the
+marginalization of the multinomial parameters~\cite{minka03estimating}. The
+multinomial distribution $p(\mathbf{c}_t\mid\boldsymbol{\theta})$ has parameters
+$\boldsymbol{\theta}=[\theta_1,\theta_2,\dots,\theta_K]$, corresponding to
+$\boldsymbol{\eta}$ above. The Dirichlet prior
+$p(\boldsymbol{\theta}\mid\boldsymbol{\alpha})$ has
 hyperparameters $\boldsymbol{\alpha}=[\alpha_1,\alpha_2,\dots,\alpha_K]$,
 corresponding to $\boldsymbol{\psi}$ above. The likelihood part of
 \eqref{eqn:labeling} can now be formulated as
