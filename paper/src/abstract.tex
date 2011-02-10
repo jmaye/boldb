@@ -1,15 +1,36 @@
-One research area that has turned more and more into the focus of interest
-during the last years is the development of driver intelligent assistant
-systems. In particular, a very active topic is the design of human-friendly
-vehicle control systems, able to meet the driver specific behaviors. In this
-paper we address the problem of learning driver behaviors based on on camera
-images and inertial information (IMU). Our approach proposes a novel on-line and
-unsupervised way of learning driver's behavior in different traffic conditions.
-Specifically we learn the relationship between vehicle motion and image streams.
-In this paper we introduce a novel technique that uses a \textit{change-point}
-detection model to segment IMU and image streams into portions corresponding to
-behaviors. Change-point detection is the problem of detecting abrupt changes to
-the parameters of a statistical model. This is computed on-line and in an
-unsupervised manner. The results from experiments in populated urban
-environments demonstrate the robustness of the algorithm to correctly identify
-several driving behaviors.
+This paper presents a novel self-supervised online learning method to
+discover driving behaviors from data acquired with an inertial
+measurement unit (IMU) and a camera. Both sensors where mounted in a
+car that was driven by a human through a typical city environment with
+intersections, pedestrian crossings and traffic lights. The presented
+system extracts motion segments from the IMU data and relates them to
+the visual cues obtained from the camera data. It employs a Bayesian
+on-line estimation method to discover the motion segments based on
+change-point detection and uses a Dirichlet Compound Multinomial (DCM)
+model to represent the visual features extracted from the camera
+images. By incorporating these visual cues into the on-line estimation
+process, labels are computed that are equal for similar motion
+segments. As a result, typical traffic situations such as braking
+maneuvres in front of a red light can be identified
+automatically. Furthermore, appropriate actions in form of observed
+motion changes are associated to the discovered traffic
+situations. The approach is evaluated on a real data set acquired in
+the center of Zurich.
+
+%One research area that has turned more and more into the focus of
+%interest during the last years is the development of driver
+%intelligent assistant systems. In particular, a very active topic is
+%the design of human-friendly vehicle control systems, able to meet the
+%driver specific behaviors. In this paper we address the problem of
+%learning driver behaviors based on on camera images and inertial
+%information (IMU). Our approach proposes a novel on-line and
+%unsupervised way of learning driver's behavior in different traffic
+%conditions.  Specifically we learn the relationship between vehicle
+%motion and image streams.  In this paper we introduce a novel
+%technique that uses a \textit{change-point} detection model to segment
+%IMU and image streams into portions corresponding to
+%behaviors. Change-point detection is the problem of detecting abrupt
+%changes to the parameters of a statistical model. This is computed
+%on-line and in an unsupervised manner. The results from experiments in
+%populated urban environments demonstrate the robustness of the
+%algorithm to correctly identify several driving behaviors.
