@@ -8,24 +8,22 @@ crosswalks, or changes of speed limit. We have driven in a loop so as to come
 several times in the same situation and thus have an estimation of the quality
 of our solution.
 
-In the rest of this Section, we first display an experiment of the whole
-algorithm on synthetic data. It is easier to have a ground truth on simulated
-data and hence validate our approach. We then show results on real-world data
-with a detailed analysis of all the components.
-
 \subsection{Simulation}
-For visualization purposes, we have simulated IMU data with an univariate normal
-distribution and have introduced change-points every $50$ data points. We have
-randomly generated 3 different $\boldsymbol{\alpha}_i$ with $K=256$ coding for
-the traffic situations. Although the algorithm starts with no prior knowledge,
-we could also start with previously learned models $M_i$ and $A_i$.
+Since it is easier to have a ground truth on simulated data and hence validate
+our approach, we first display an experiment of the whole algorithm on synthetic
+data. For visualization purposes, we have simulated IMU data with an univariate
+normal distribution and have introduced change-points every $50$ data points. We
+have randomly generated 3 different $\boldsymbol{\alpha}_i$ with $K=256$ coding
+for the traffic situations. Although the algorithm starts with no prior
+knowledge, we could also start with previously learned models $M_i$ and $A_i$.
 
 Fig.~\ref{fig:simulation} depicts the output of the simulation and demonstrates
 the pertinence of our method. We display the MAP solution for \eqref{eqn:action}
 on the bottom plot and thus the prediction reflects the Gaussian component with
-the maximum number of data points. The code runs in MATLAB with no attempt for
-optimization and has a processing time of about $0.3$ seconds per time step. In
-a realistic scenario, histogram building from image adds up to the time.
+the maximum number of data points.
+%The code runs in MATLAB with no attempt for
+%optimization and has a processing time of about $0.3$ seconds per time step. In
+%a realistic scenario, histogram building from image adds up to the time.
 
 \begin{figure}[t]
 \centering
@@ -39,8 +37,8 @@ a realistic scenario, histogram building from image adds up to the time.
 \end{figure}
 
 \subsection{Motion Segmentation}
-In this experiment, we want to estimate the quality of our motion segmentation
-algorithm from Section~\ref{sec:motion}. We performed inference on the
+We have estimated the quality of our motion segmentation algorithm
+from Section~\ref{sec:motion} on real-world data and performed inference on the
 final posterior distribution \eqref{eqn:joint} to get the optimal
 sequence of segment lengths which represents our motion segments. We set the
 hazard rate to $\lambda=1/10$, the number of particles to $P=100$, and the prior
@@ -69,21 +67,21 @@ discovered by our algorithm.}
 In this experiment, we are interested in evaluating the part of our algorithm
 presented in Section~\ref{sec:labeling} and perform inference on
 \eqref{eqn:labeling} to obtain the most likely label for a scene. In a first
-phase, we collected a subset of images from traffic lights, yield signs, and
-pedestrian crossings. Models $M_i$ were learned on these images using
+phase, we have collected a subset of images from traffic lights, yield signs,
+and pedestrian crossings. Models $M_i$ were learned on these images using
 \eqref{eqn:alpha_update} and frozen during the evaluation. In a second phase,
-we started the algorithm with no prior models. The dictionary was created from a
-set of $N=400$ randomly picked images and the SIFT features quantized into
-$K=256$ visual words. The prior hyperparameters of the Dirichlet distribution
-were set to $\boldsymbol{\alpha}_0=\mathbf{1}$.
+we have started the algorithm with no prior models. The dictionary was created
+from a set of $N=400$ randomly picked images and the SIFT features quantized
+into $K=256$ visual words. The prior hyperparameters of the Dirichlet
+distribution were set to $\boldsymbol{\alpha}_0=\mathbf{1}$.
 
-In the supervised case, we have manually annotated the image sequence and the
-resulting labeling can be easily compared to the ground truth. We obtained an
+In the supervised case, we have manually annotated the image sequence and
+compared the resulting labeling to the ground truth. We obtained an
 accuracy of $93\%$ for traffic light scenes, $99\%$ for yield scenes, and
 $91\%$ for pedestrian crossings scenes. We except these results to drop slightly
-in a completely unseen environment. In the unsupervised case, $\xi$ acts as a
+in a previously unseen environment. In the unsupervised case, $\xi$ acts as a
 concentration parameter, i.e., it controls the tendency to create new classes.
-It is challenging to evaluate the final labeling. Two traffic lights
+The final labeling is challenging to evaluate. Two traffic lights
 scenes might for instance get different labels without interfering with the
 final action prediction.
 
