@@ -82,14 +82,13 @@ in a previously unseen environment. In the unsupervised case, $\xi$ acts as a
 concentration parameter, i.e., it controls the tendency to create new classes.
 The final labeling is challenging to evaluate. Two traffic lights
 scenes might for instance get different labels without interfering into the
-final action prediction. With $\xi=150$, our algorithm discovered $10$ different
-traffic situations and was able to re-associate to the same labels in the
-different runs of our driving loop.
+final action prediction. With $\xi=200$, our algorithm discovered $15$ different
+traffic situations and was able to re-associate correctly to the same labels in
+the different runs of our driving loop.
 
 \subsection{Action Prediction}
 The strategy presented in Section~\ref{sec:action} is relatively straightforward
 to evaluate, since predictions can be compared to incoming IMU data. We set the
 threshold for creating a new Gaussian to $\epsilon=5$ and inferred on
-\eqref{eqn:action}.
-
-SECOND PARAGRAPH OUTPUTTING AND COMMENTING THE RESULTS.
+\eqref{eqn:action}. Our algorithm performed accurately in predicting the driving
+actions.
