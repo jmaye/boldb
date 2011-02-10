@@ -1,39 +1,36 @@
 Existing driving behavior models in psychology are largely subjective and based
-on self-report scales~\cite{ranney94models}. They are difficult to quantify
+on self-report scales~\cite{ranney94models}. They are difficult to quantify,
 because they include many psychological aspects like motivation, or risk
-assessment.
-
-Many works in the intelligent vehicle
+assessment. Many works in the intelligent vehicle
 literature~\cite{donges78two,mcruer80human,hess90control,macadam81application}
 focus on modeling the driver behavior via their steering behavior or road
 tracking information or desired driver's path as source of behavior's
 information. Other works recognize driver's intentions via Bayesian reasoning on
 a complex input including the driver's current control actions and the traffic
-environment surrounding them~\cite{oliver00graphical,liu01modeling}. To our
-knowledge, there has been few research works that combine traffic scenario
-recognition and action prediction in an on-line and unsupervised fashion.
+environment surrounding them~\cite{oliver00graphical,liu01modeling}. In a
+previous work~\cite{maye10inferring}, we were able to infer an action from a
+direction sign in an indoor environment with a semi-supervised approach using
+vision and prerecorded robot actions. We extend this idea to outdoor, remove any
+supervision, and predict vehicle actions in an on-line fashion. Meyer
+\emph{et al.}~\cite{meyer09probabilistic} predicted traffic situations using
+Hidden Markov Models (HMM). They however restricted their situations space by
+modeling states with respect to surrounding vehicles (distance, speed, bearing)
+and manually segmented image sequences for initial estimates. In this paper, we
+exclude any manual intervention in the process and use a more complete set of
+variables for predicting states. Other
+works~\cite{heracles10vision,pugeault10learning} make use of supervised off-line
+classification methods for learning the relation between driving actions and 
+visual features. The actions are manually annotated and discretized in the
+training phase. To our knowledge, there has been few research works that combine
+traffic scenario recognition and action prediction in an on-line and
+unsupervised fashion.
 
-In a previous work~\cite{maye10inferring}, we were able to infer an action from
-a direction sign in an indoor environment with a semi-supervised approach
-using vision and prerecorded robot actions. We extend this idea to outdoor,
-remove any supervision, and predict vehicle actions in an on-line fashion.
-Meyer \emph{et al.}~\cite{meyer09probabilistic} predicted traffic situations
-using Hidden Markov Models (HMM). They however restricted their situations space
-by modeling states with respect to surrounding vehicles (distance, speed,
-bearing) and manually segment image sequences for initial estimates. In this
-paper, we exclude any manual intervention in the process and use a more complete
-set of variables for predicting states. Other
-works~\cite{heracles10vision,pugeault10learning} make use of supervised
-off-line classification methods for learning the relation between driving
-actions and  visual features. The actions are manually annotated and discretized
-in the training phase.
-
-Change-point detection is a well-known problem in statistics. The CUSUM
-detector~\cite{page54continuous} uses piece-wise segments of Gaussian mean with
-noise. Our implementation is largely inspired on the statistical models
-presented in~\cite{adams07bayesian,fearnhead07online} that are easily applicable
-to conjugate-exponential models. Several other applications, specially in the
-field of computer vision, have used change-point
-detection~\cite{zhai05general,cemgil05hybrid}. To the author best knowledge,
-this paper represents the first application in the field of learning driving
-behaviors with multi-modal sensory data.
+%Change-point detection is a well-known problem in statistics. The CUSUM
+%detector~\cite{page54continuous} uses piece-wise segments of Gaussian mean with
+%noise. Our implementation is largely inspired on the statistical models
+%presented in~\cite{adams07bayesian,fearnhead07online} that are easily applicable
+%to conjugate-exponential models. Several other applications, specially in the
+%field of computer vision, have used change-point
+%detection~\cite{zhai05general,cemgil05hybrid}. To the author best knowledge,
+%this paper represents the first application in the field of learning driving
+%behaviors with multi-modal sensory data.
