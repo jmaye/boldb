@@ -101,37 +101,37 @@ h(t) = \frac{\lambda\exp(-\lambda t)}{\exp(-\lambda t)} = \lambda.
 \end{equation}
 
 Thus, the hazard rate is constant and the process is ``memoryless''.
-Fig.~\ref{fig:transition} shows an example of possible transitions
-from $r_{t-1}$ to $r_{t+1}$.
+%Fig.~\ref{fig:transition} shows an example of possible transitions
+%from $r_{t-1}$ to $r_{t+1}$.
 
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}[scale=0.7]
-\tikzstyle{every node} = [rectangle,draw=blue!50,fill=blue!20,thick,
-inner sep=0pt,minimum size=6mm]
-\node (a) at (-4, 2) {$r_{t-1}=0$};
-\node (b) at (-4, 0) {$r_{t-1}=1$};
-\node (c) at (-4, -2) {$r_{t-1}=2$};
-\node (d) at (0, 2) {$r_t=0$};
-\node (e) at (0, 0) {$r_t=1$};
-\node (f) at (0, -2) {$r_t=2$};
-\node (g) at (4, 2) {$r_{t+1}=0$};
-\node (h) at (4, 0) {$r_{t+1}=1$};
-\node (i) at (4, -2) {$r_{t+1}=2$};
-\draw [->,thick] (a) -- (d);
-\draw [->,thick] (a) -- (e);
-\draw [->,thick] (b) -- (d);
-\draw [->,thick] (b) -- (f);
-\draw [->,thick] (c) -- (d);
-\draw [->,thick] (d) -- (h);
-\draw [->,thick] (d) -- (g);
-\draw [->,thick] (e) -- (i);
-\draw [->,thick] (e) -- (g);
-\draw [->,thick] (f) -- (g);
-\end{tikzpicture}
-\caption{Example of possible transitions from $r_{t-1}$ to $r_{t+1}$.}
-\label{fig:transition}
-\end{figure}
+%\begin{figure}[t]
+%\centering
+%\begin{tikzpicture}[scale=0.45]
+%\tikzstyle{every node} = [rectangle,draw=blue!50,fill=blue!20,thick,
+%inner sep=0pt,minimum size=6mm]
+%\node (a) at (-4, 2) {$r_{t-1}=0$};
+%\node (b) at (-4, 0) {$r_{t-1}=1$};
+%\node (c) at (-4, -2) {$r_{t-1}=2$};
+%\node (d) at (0, 2) {$r_t=0$};
+%\node (e) at (0, 0) {$r_t=1$};
+%\node (f) at (0, -2) {$r_t=2$};
+%\node (g) at (4, 2) {$r_{t+1}=0$};
+%\node (h) at (4, 0) {$r_{t+1}=1$};
+%\node (i) at (4, -2) {$r_{t+1}=2$};
+%\draw [->,thick] (a) -- (d);
+%\draw [->,thick] (a) -- (e);
+%\draw [->,thick] (b) -- (d);
+%\draw [->,thick] (b) -- (f);
+%\draw [->,thick] (c) -- (d);
+%\draw [->,thick] (d) -- (h);
+%\draw [->,thick] (d) -- (g);
+%\draw [->,thick] (e) -- (i);
+%\draw [->,thick] (e) -- (g);
+%\draw [->,thick] (f) -- (g);
+%\end{tikzpicture}
+%\caption{Example of possible transitions from $r_{t-1}$ to $r_{t+1}$.}
+%\label{fig:transition}
+%\end{figure}
 
 For the computation of the predictive distribution, we can make it dependent
 only on the last data point $\mathbf{z}_{t-1}$ since we are doing a sequential

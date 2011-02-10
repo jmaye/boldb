@@ -64,16 +64,15 @@ discovered by our algorithm.}
 \end{figure}
 
 \subsection{Traffic Situation Labeling and Recognition}
-In this experiment, we are interested in evaluating the part of our algorithm
-presented in Section~\ref{sec:labeling} and perform inference on
-\eqref{eqn:labeling} to obtain the most likely label for a scene. In a first
-phase, we have collected a subset of images from traffic lights, yield signs,
-and pedestrian crossings. Models $M_i$ were learned on these images using
-\eqref{eqn:alpha_update} and frozen during the evaluation. In a second phase,
-we have started the algorithm with no prior models. The dictionary was created
-from a set of $N=400$ randomly picked images and the SIFT features quantized
-into $K=256$ visual words. The prior hyperparameters of the Dirichlet
-distribution were set to $\boldsymbol{\alpha}_0=\mathbf{1}$.
+We have evaluated the technique presented in Section~\ref{sec:labeling} and
+performed inference on \eqref{eqn:labeling} to obtain the most likely label for
+a scene. In a first phase, we have collected a subset of images from traffic
+lights, yield signs, and pedestrian crossings. Models $M_i$ were learned on
+these images using \eqref{eqn:alpha_update} and frozen during the evaluation. In
+a second phase, we have started the algorithm with no prior models. The
+dictionary was created from a set of $N=400$ randomly picked images and the SIFT
+features quantized into $K=256$ visual words. The prior hyperparameters of the
+Dirichlet distribution were set to $\boldsymbol{\alpha}_0=\mathbf{1}$.
 
 In the supervised case, we have manually annotated the image sequence and
 compared the resulting labeling to the ground truth. We obtained an
@@ -83,12 +82,14 @@ in a previously unseen environment. In the unsupervised case, $\xi$ acts as a
 concentration parameter, i.e., it controls the tendency to create new classes.
 The final labeling is challenging to evaluate. Two traffic lights
 scenes might for instance get different labels without interfering into the
-final action prediction.
+final action prediction. With $\xi=150$, our algorithm discovered $10$ different
+traffic situations and was able to re-associate to the same labels in the
+different runs of our driving loop.
 
 \subsection{Action Prediction}
-In this final experiment, we focus on the strategy presented in
-Section~\ref{sec:action}. The quantitative evaluation is relatively simple since
-we can compare our prediction to the incoming IMU data. We set the threshold for
-creating a new Gaussian to $\epsilon=5$.
+The strategy presented in Section~\ref{sec:action} is relatively straightforward
+to evaluate, since predictions can be compared to incoming IMU data. We set the
+threshold for creating a new Gaussian to $\epsilon=5$ and inferred on
+\eqref{eqn:action}.
 
 SECOND PARAGRAPH OUTPUTTING AND COMMENTING THE RESULTS.
