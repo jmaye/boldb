@@ -21,18 +21,15 @@ the traffic situations. Although the algorithm starts with no prior knowledge,
 we could also start with previously learned models $M_i$ and $A_i$.
 
 Fig.~\ref{fig:simulation} depicts the output of the simulation and demonstrates
-the pertinence of our method. After a change-point, the algorithm needs a time
-of adaptation to collect enough data points in order to converge to the correct
-prediction. In Fig.~\ref{fig:simulation}, we display the MAP solution for
-\eqref{eqn:action} on the bottom plot and thus the prediction reflects the
-Gaussian component with the biggest number of data points. The code runs in
-MATLAB with no attempt for optimization and has a processing time of about
-$0.3$ seconds per time step. In a realistic scenario, histogram building from
-image adds up to the time.
+the pertinence of our method. We display the MAP solution for \eqref{eqn:action}
+on the bottom plot and thus the prediction reflects the Gaussian component with
+the maximum number of data points. The code runs in MATLAB with no attempt for
+optimization and has a processing time of about $0.3$ seconds per time step. In
+a realistic scenario, histogram building from image adds up to the time.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{fig/simResult.eps}
+\includegraphics[width=0.8\columnwidth]{fig/simResult.eps}
 \caption{Simulation results of the entire algorithm. From top to bottom, the
 plots display the simulated IMU data $\mathbf{z}_t$, the inferred segment
 lengths $r_t$, the inferred labels $l_t$ (blue circle) and ground truth
@@ -57,9 +54,6 @@ has been compared to a manual annotation of our image sequence and exhibited an
 accuracy of approximatively $92\%$. For the labeling of the change-points, we
 have watched the video and noted down where we would expect a change of driving
 behavior. The parameter $\lambda$ controls the false positives/negatives rates.
-As expected, the typical motion patterns that appeared were driving straight
-with no acceleration, driving straight with acceleration or deceleration, and
-turning left or right.
 
 \begin{figure}[t]
 \centering
@@ -80,15 +74,17 @@ pedestrian crossings. Models $M_i$ were learned on these images using
 we started the algorithm with no prior models. The dictionary was created from a
 set of $N=400$ randomly picked images and the SIFT features quantized into
 $K=256$ visual words. The prior hyperparameters of the Dirichlet distribution
-were set to $\boldsymbol{\alpha}_0=\mathbf{1}$. In the supervised
-case, we have manually annotated the image sequence and the resulting labeling
-can be easily compared to the ground truth. In the unsupervised case, the
-quality of the labeling is more challenging to evaluate.
+were set to $\boldsymbol{\alpha}_0=\mathbf{1}$.
 
-In the supervised learning case, we obtained an accuracy of $93\%$ for traffic
-light scenes, $99\%$ for yield scenes, and $91\%$ for pedestrian crossings
-scenes. We except these results to drop slightly in a completely unseen
-environment.
+In the supervised case, we have manually annotated the image sequence and the
+resulting labeling can be easily compared to the ground truth. We obtained an
+accuracy of $93\%$ for traffic light scenes, $99\%$ for yield scenes, and
+$91\%$ for pedestrian crossings scenes. We except these results to drop slightly
+in a completely unseen environment. In the unsupervised case, $\xi$ acts as a
+concentration parameter, i.e., it controls the tendency to create new classes.
+It is challenging to evaluate the final labeling. Two traffic lights
+scenes might for instance get different labels without interfering with the
+final action prediction.
 
 \subsection{Action Prediction}
 In this final experiment, we focus on the strategy presented in
