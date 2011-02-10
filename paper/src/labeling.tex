@@ -37,34 +37,23 @@ parameters iteratively.
 
 As we want to be able to discover new traffic situations on-line, we have to
 state if the current data $\mathbf{c}_t$ is unlikely to come from any of the
-$N$ known models so far. Following the strategy of~\cite{ranganathan10pliss},
-we perform $N$ likelihood ratio test at each time step. We compare model $M_i$
-with a model learned over segment $r_t$. The test statistic is
+$N$ known models so far. We use Bayesian hypothesis testing and compute
+the \emph{Bayes factor}~\cite{kass95bayes} for all the models $M_i$ against an
+alternative model:
 
 \begin{equation}
-\label{eqn:statistic}
-D = -2\ln\frac{p(\mathbf{c}_t\mid l_t=i,\boldsymbol{\psi}_i)}{p(\mathbf{c}_t\mid
+\label{eqn:bayesfactor}
+B = \frac{p(\mathbf{c}_t\mid l_t=i,\boldsymbol{\psi}_i)}{p(\mathbf{c}_t\mid
 l_t,r_t,\mathbf{c}_{t-1},\boldsymbol{\psi}^{r_{t-1}})},
 \end{equation}
 
 where $\boldsymbol{\psi}^{r_{t-1}}$ are the hyperparameters learned over the
 current segment $r_{t-1}$.
 
-Based on the value of $D$, we have to decide whether to accept or reject the
-null hypothesis, i.e., data in segment $r_t$ arises from model $M_i$. It is
-shown that when the sample size for computing $\boldsymbol{\psi}$ grows towards
-infinity, $D$ converges towards a Chi-square distribution with $K-1$ degrees of
-freedom, where $K$ is the dimension of $\boldsymbol{\psi}$. In our case, as will
-be shown below, we have thousands of features per image and segments typically
-contain hundreds of images. This is sufficient to approximate $D$ with a
-Chi-square distribution. We will thus compare $D$ to the Chi-square value
-corresponding to the desired statistical significance $\xi$ of the null
-hypothesis. In practice, this is done by computing the value of the cumulative
-distribution function of the Chi-square distribution for $D$ and reject the
-model $M_i$ if it is below $\xi$.
-
-In case all models are rejected, we create a new instance $M_{N+1}$
-with hyperparameter vector $\boldsymbol{\psi}^{r_{t-1}}$, set $p(l_t=N+1\mid
+The value $B$ in \eqref{eqn:bayesfactor} indicates our confidence in the model
+$M_i$ and we compare it to a threshold $\xi$ for the decision. In case all
+models are rejected, we create a new instance $M_{N+1}$ with hyperparameter
+vector $\boldsymbol{\psi}^{r_{t-1}}$, set $p(l_t=N+1\mid
 r_t,\mathbf{c}_{1:t})=p_{new}$, and $p(l_t=1:N\mid r_t,\mathbf{c}_{1:t})=
 (1-p_{new})/N$. We finally update the hyperparameters $\boldsymbol{\psi}_i$ of
 model $M_i$, such that $i=\argmax_{j=1:N}p(l_t=j\mid
