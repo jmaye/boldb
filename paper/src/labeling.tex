@@ -26,8 +26,8 @@ For the prior part in \eqref{eqn:labeling}, we use the posterior of the previous
 time step, that is
 $p(l_t\mid r_t,\mathbf{c}_{1:t-1})=p(l_{t-1}\mid r_{t-1},\mathbf{c}_{1:t-1})$.
 If we are in a new segment with $r_t=0$, we set the prior to a uniform
-distribution over the known models, i.e., $p(l_t=1:N\mid r_t,\mathbf{c}_{1:t-1})=
-\frac{1}{N}$. The likelihood part in
+distribution over the known models, i.e.,
+$p(l_t=1:N\mid r_t,\mathbf{c}_{1:t-1})=\frac{1}{N}$. The likelihood part in
 \eqref{eqn:labeling} is computed with the model probability density function
 $p(\mathbf{c}_t\mid \boldsymbol{\eta}_i)$ in the same fashion as in
 \eqref{eqn:preddistr}, i.e., using a conjugate prior with hyperparameters
@@ -103,13 +103,13 @@ corresponding to $\boldsymbol{\psi}$ above. The likelihood part of
 \begin{eqnarray}
 \label{eqn:polya}
 p(\mathbf{c}_t\mid l_t,r_t,\mathbf{c}_{t-1},\boldsymbol{\alpha}^{r_{t-1}})
-&=&\\\nonumber
+&=&\nonumber\\
 \int_{\boldsymbol{\theta}^{r_{t-1}}}
 p(\mathbf{c}_{t}\mid\boldsymbol{\theta}^{r_{t-1}})
 p(\boldsymbol{\theta}^{r_{t-1}}\mid
 l_t,r_t,\mathbf{c}_{t-1},\boldsymbol{\alpha}^{r_{t-1}})
 d\boldsymbol{\theta}^{r_{t-1}}
-&=&\\\nonumber\frac{n!}{\prod_{k=1}^K n_k!}\frac{\Gamma(\alpha^{r_{t-1}})}
+&=&\nonumber\\\frac{n!}{\prod_{k=1}^K n_k!}\frac{\Gamma(\alpha^{r_{t-1}})}
 {\Gamma(n+\alpha^{r_{t-1}})}\prod_{k=1}^K\frac{\Gamma(n_k+\alpha^{r_{t-1}}_k)}
 {\Gamma(\alpha^{r_{t-1}}_k)},
 \end{eqnarray}

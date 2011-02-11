@@ -20,7 +20,9 @@ knowledge, we could also start with previously learned models $M_i$ and $A_i$.
 Fig.~\ref{fig:simulation} depicts the output of the simulation and demonstrates
 the pertinence of our method. We display the MAP solution for \eqref{eqn:action}
 on the bottom plot and thus the prediction reflects the Gaussian component with
-the maximum number of data points.
+the maximum number of data points. At time step $100$, a new Gaussian with
+mean $10$ is created for label $2$. It becomes the MAP only at time step $300$
+after accumulating enough evidence.
 %The code runs in MATLAB with no attempt for
 %optimization and has a processing time of about $0.3$ seconds per time step. In
 %a realistic scenario, histogram building from image adds up to the time.
@@ -32,7 +34,7 @@ the maximum number of data points.
   plots display the simulated IMU data $\mathbf{z}_t$, the inferred
   segment lengths $r_t$, the inferred labels $l_t$ (blue circle) with
   ground truth (red square), and the MAP estimate for the action
-  $\mathbf{a}_t$.}
+  $\mathbf{a}_t$.\vspace{-5mm}}
 \label{fig:simulation}
 \end{figure}
 
@@ -59,7 +61,7 @@ behavior. The parameter $\lambda$ controls the false positives/negatives rates.
 \includegraphics[width=0.81002\columnwidth]{fig/cpResult.eps}
 \caption{Optimal motion segmentation from IMU data. The three top plots are the
 IMU raw values over time. The bottom plot depicts the motion segments
-discovered by our algorithm.}
+discovered by our algorithm.\vspace{-5mm}}
 \label{fig:motion_segments}
 \end{figure}
 
