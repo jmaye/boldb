@@ -1,0 +1,5 @@
+This video shows a demonstration of the system presented in "Bayesian On-line of
+Driving Behaviors". It displays 3 sequences of a car approaching a traffic light.
+The label 7 is associated to all of them and the predicted action is a braking
+maneuver (only x acceleration is printed here). The segment numbers also appear
+on the frames and this shows the quality of the motion segmentation.
