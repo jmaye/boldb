@@ -1,0 +1,54 @@
+%************************************************************************** 
+% ETH Beamer Color Theme
+% 
+% Author::      Ralf Kaestner  ralf.kaestner@mavt.ethz.ch
+% Subject:      ETH beamer color theme file 
+%               (based on Jiwon Shin's and Stefan Gaechter's ASL theme).
+% Version:      1.1 
+% Date:         14.12.2010
+%**************************************************************************
+
+\mode<presentation>
+
+% ETH theme colors
+\definecolor{ethbluedarkfg}{HTML}{00335B}
+\definecolor{ethgraylightfg}{HTML}{CCCCCC}
+\definecolor{ethgraydarkfg}{HTML}{333333}
+\definecolor{ethbluelightbg}{HTML}{2B5297}
+\definecolor{ethbluedarkbg}{HTML}{092442}
+
+\setbeamercolor*{palette primary}{use=structure,fg=white,bg=ethbluelightbg}
+\setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!75!black}
+\setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}
+\setbeamercolor*{palette quaternary}{fg=white,bg=ethbluedarkbg}
+
+\setbeamercolor*{sidebar}{use=structure,bg=structure.fg}
+  
+\setbeamercolor*{palette sidebar primary}{use=structure,fg=structure.fg!10}
+\setbeamercolor*{palette sidebar secondary}{fg=white}
+\setbeamercolor*{palette sidebar tertiary}{use=structure,fg=structure.fg!50}
+\setbeamercolor*{palette sidebar quaternary}{fg=white}
+
+\setbeamercolor*{titlelike}{parent=palette primary}
+
+\setbeamercolor*{separation line}{}
+\setbeamercolor*{fine separation line}{}
+
+\setbeamercolor*{normal text}{fg=ethgraydarkfg}
+\setbeamercolor*{alerted text}{fg=ethgraydarkfg}
+
+\setbeamercolor*{title}{fg=ethbluedarkfg}
+\setbeamercolor*{title bar}{fg=ethbluedarkfg}
+\setbeamercolor*{frametitle}{fg=ethbluedarkfg}
+\setbeamercolor*{institute}{fg=ethgraydarkfg}
+
+\setbeamercolor*{section in toc}{fg=ethgraydarkfg}
+
+\setbeamercolor*{item}{fg=ethbluedarkfg}
+\setbeamercolor*{subitem}{use=item,fg=item.fg!50!white}
+\setbeamercolor*{subsubitem}{use=subitem,fg=subitem.fg!50!white}
+
+\setbeamercolor*{alerted box}{fg=ethgraydarkfg,bg=ethbluelightbg!50!white}
+
+\mode
+<all>

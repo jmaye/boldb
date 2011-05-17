@@ -1,0 +1,78 @@
+%************************************************************************** 
+% ETH Beamer Class Theme
+% 
+% Author::      Ralf Kaestner  ralf.kaestner@mavt.ethz.ch
+% Subject:      ETH beamer class theme file 
+%               (based on Jiwon Shin's and Stefan Gaechter's ASL theme).
+% Version:      1.1 
+% Date:         14.12.2010
+%**************************************************************************
+
+\RequirePackage{pgf}
+
+\mode<presentation>
+
+\useoutertheme[]{shadow}
+\useinnertheme[]{rectangles}
+\usecolortheme[]{eth}
+\usefonttheme[]{eth}
+
+\setbeamercovered{transparent}
+
+\pgfdeclareimage[width=2.5cm]{ethlogo}{figures/ethlogo}
+\pgfdeclareimage[width=1.0\paperwidth]{ethfooter}{figures/ethfooter}
+\pgfdeclareimage[width=1.0\paperwidth]{ethtitle}{figures/ethtitle}
+
+\newcommand{\maketitleframe}{
+  \setbeamertemplate{background canvas}
+  {
+    \begin{beamercolorbox}[ht=\paperheight]{title page}
+      \pgfuseimage{ethtitle}
+      \vskip 0.41cm
+    \end{beamercolorbox}
+    \flushbottom
+  }
+  \begin{frame}
+    \titlepage
+  \end{frame}
+  \setbeamertemplate{background canvas}
+  {
+  }
+}
+
+\setbeamertemplate{frametitle}
+{
+  \usebeamerfont*{frametitle}\insertframetitle
+  \vskip-0.20em
+  \hskip-0.2cm
+  \usebeamerfont*{framesubtitle}\insertframesubtitle
+}
+
+\setbeamertemplate{footline}
+{
+  \pgfuseimage{ethfooter}
+  \vskip -0.4cm
+  \linethickness{0pt}
+  \framelatex{
+  \begin{beamercolorbox}[wd=\paperwidth,ht=0.4cm,sep=0.08cm,center]{location bar}
+    \usebeamerfont{section in head/foot}\usebeamercolor[fg]{section in head/foot}%
+    \insertshortauthor\;--\;\insertshorttitle\;--\;\insertdate
+  \end{beamercolorbox}}
+}
+
+\setbeamertemplate{title page}
+{
+  \begin{beamercolorbox}[ht=1.8cm,right]{title page}
+    \usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle
+    \vskip 0.2cm
+    \usebeamerfont{author}\usebeamercolor[fg]{author}\insertauthor
+    \vskip 0.4cm
+    \usebeamerfont{institute}\usebeamercolor[fg]{institute}\insertinstitute
+  \end{beamercolorbox}
+}
+
+\setbeamertemplate{navigation symbols}{}
+
+\mode
+<all>
+
